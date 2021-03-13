@@ -1,0 +1,25 @@
+% This file was created by tikzplotlib v0.9.8.
+\begin{tikzpicture}
+
+\begin{axis}[
+tick align=outside,
+tick pos=left,
+title={Temperature inside the dryer during the day},
+x grid style={white!69.0196078431373!black},
+xlabel={Time of the day (h)},
+xmin=9, xmax=31,
+xtick style={color=black},
+y grid style={white!69.0196078431373!black},
+ylabel={Temperatures (°C)},
+ymin=1.8, ymax=6.2,
+ytick style={color=black}
+]
+\addplot [semithick, green!50!black, mark=*, mark size=3, mark options={solid}, only marks]
+table {%
+10 2
+20 6
+30 5
+};
+\end{axis}
+
+\end{tikzpicture}
