@@ -37,7 +37,7 @@ e = 6 / 1000  # m - Thickness of the slices of product
 
 Lc = 0.5  # m - Hydraulic diamater #TODO: how to fix this parameter ?
 h_star = 10                        #TODO: how to fix this parameter ?
-Td = 50     # °C - mean temperature at the end of the heating section along the day #TODO: discuss
+Td = 70     # °C - mean temperature at the end of the heating section along the day #TODO: discuss
 Tmax = 90   # °C - maximal Tair allowed at the end of the heating section along the day #TODO: discuss function product
 tol = 1     # °C (or K) - tolerance on the mean temperature in the dryer
 
@@ -190,7 +190,7 @@ def estimate_length_heating(Tair_LH: list, LH):
 
     # Criteria 2
     mean_temperature = darboux_sum(Tair_LH, DELTA_T) / td
-    print("with LH = ", LH, " mean T : ", mean_temperature)
+    print("with LH = ", LH, " mean Td is : ", mean_temperature, " °C")
     if abs(mean_temperature - Td) < tol :
         result = 0
 
@@ -247,9 +247,11 @@ def find_next_value(test_length_heating, res, LH, intervals_z):
         upper = min([i for i in test_length_heating if i >= LH], key=lambda x: abs(x - LH))
         next = upper + (LH - upper) / 2
 
-    next = min(intervals_z, key=lambda x:abs(x-next))
+    next_rounded = min(intervals_z, key=lambda x:abs(x-next))
+    print("Next value to try should be ", next, " but is rounded to ", next_rounded)
 
-    return next
+
+    return next_rounded
 
 def extract_temperature_air(filtered_storage):
     """From the filtered dictionnary, extract Tair for t from t0 to tf """
@@ -260,8 +262,17 @@ def extract_temperature_air(filtered_storage):
 
     return temperature_air
 
+def extract_energy_flux(filtered_storage):
+    """From the filtered dictionnary, extract P for t from t0 to tf """
+
+    energy_flux = []
+    for key in filtered_storage:
+        energy_flux.append(filtered_storage[key][2])
+
+    return energy_flux
+
 def main():
-    LH = 3
+    LH = 15
     air = 3     # Tair is the 4th element of vector x
     energy = 2  # P is the 3rd element of vector x
     Tair_LH = []
@@ -291,25 +302,27 @@ def main():
 
     res = estimate_length_heating(Tair_LH, LH)
 
-    test_length_heating = [0, LH]  # Keeps track of the LH values tested
+    test_length_heating = [0]  # Keeps track of the LH values tested
 
     while res != 0 and (len(test_length_heating) == len(set(test_length_heating))):
 
-        LH = find_next_value(test_length_heating, res, LH, intervals_z)
+        new_LH = find_next_value(test_length_heating, res, LH, intervals_z)
+        print("Next value is: ", new_LH)
         test_length_heating.append(LH)
+        LH = new_LH
 
-        print("LH/list ", LH, test_length_heating)
+        print("List of trials ", test_length_heating, " now we try ", LH)
         filtered_storage = filter_dictionnary(LH)
-        print(filtered_storage)
         Tair_LH = toCelsius(extract_temperature_air(filtered_storage))
         res = estimate_length_heating(Tair_LH, LH)
+    P_LH = extract_energy_flux(filtered_storage)
+
+    #TODO: rafiner le processus si la condition d'arrêt est que la même valeur a été testée deux foix, il faudrait recalculer plus petit dz
 
 
-    print(STORAGE)
 
 
-
-    #draw_profiles(Tair_LH, P_LH, intervals, LH)
+    draw_profiles(Tair_LH, P_LH, intervals, LH)
 
 
 def draw_profiles(Tair_LH: list, P_LH: list, intervals: list, LH):
