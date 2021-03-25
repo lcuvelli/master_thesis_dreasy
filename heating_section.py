@@ -143,7 +143,7 @@ def Tair_z_plus_dz(P, Tair):
 
 
 def darboux_sum(y: list, dt)->float:
-    """Gives the Darboux sum, computed as the mean value between the lower and upper Darboux the mean.
+    """Gives the Darboux sum, computed as the mean value between the lower and upper Darboux.
 
     Args:
         y: List of the value of the function on the interval [0, len(y)]
@@ -316,8 +316,9 @@ def main():
         Tair_LH = toCelsius(extract_temperature_air(filtered_storage))
         res = estimate_length_heating(Tair_LH, LH)
     P_LH = extract_energy_flux(filtered_storage)
+    print(P_LH)
 
-    #TODO: rafiner le processus si la condition d'arrêt est que la même valeur a été testée deux foix, il faudrait recalculer plus petit dz
+    #TODO: si condition d'arrêt est que la même valeur a été testée deux foix, il faudrait recalculer plus petit dz ou interpolation (linéaire)
 
 
 

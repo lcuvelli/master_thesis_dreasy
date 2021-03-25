@@ -1,25 +1,67 @@
 % This file was created by tikzplotlib v0.9.8.
 \begin{tikzpicture}
 
+\definecolor{color0}{rgb}{0.12156862745098,0.466666666666667,0.705882352941177}
+\definecolor{color1}{rgb}{1,0.498039215686275,0.0549019607843137}
+
 \begin{axis}[
+legend cell align={left},
+legend style={
+  fill opacity=0.8,
+  draw opacity=1,
+  text opacity=1,
+  at={(0.91,0.5)},
+  anchor=east,
+  draw=white!80!black
+},
 tick align=outside,
 tick pos=left,
-title={Temperature inside the dryer during the day},
+title={Energy flux},
 x grid style={white!69.0196078431373!black},
 xlabel={Time of the day (h)},
-xmin=9, xmax=31,
+xmin=9.175, xmax=16.325,
 xtick style={color=black},
 y grid style={white!69.0196078431373!black},
-ylabel={Temperatures (°C)},
-ymin=1.8, ymax=6.2,
+ylabel={Energy flux (W/m2)},
+ymin=-3.90169545031383, ymax=83.6784889508803,
 ytick style={color=black}
 ]
-\addplot [semithick, green!50!black, mark=*, mark size=3, mark options={solid}, only marks]
+\addplot [semithick, color0]
 table {%
-10 2
-20 6
-30 5
+9.5 53.7554639305366
+10 61.0772099961399
+10.5 67.0175872849403
+11 71.7111138804958
+11.5 75.2606722411213
+12 77.7430406797211
+12.5 79.2115341055824
+13 79.6975714780987
+13.5 79.2115341055824
+14 77.7430406797211
+14.5 75.2606722411213
+15 71.7111138804959
+15.5 67.01758728494
+16 61.0772099961399
 };
+\addlegendentry{to air inside dyrer}
+\addplot [semithick, color1]
+table {%
+9.5 4.32537586862156
+10 3.179763220174
+10.5 2.3375758416097
+11 1.71844896519631
+11.5 1.26330311659566
+12 0.928706523570223
+12.5 0.68273068877257
+13 0.501903649389648
+13.5 0.368970191926675
+14 0.271245293187174
+14.5 0.199403666437145
+15 0.146589906580013
+15.5 0.107764320963027
+16 0.0792220224677175
+};
+\addlegendentry{for evaporation}
 \end{axis}
 
 \end{tikzpicture}
