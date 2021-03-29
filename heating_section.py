@@ -317,6 +317,7 @@ def main():
         res = estimate_length_heating(Tair_LH, LH)
     P_LH = extract_energy_flux(filtered_storage)
     print(P_LH)
+    print(Tair_LH)
 
     #TODO: si condition d'arrêt est que la même valeur a été testée deux foix, il faudrait recalculer plus petit dz ou interpolation (linéaire)
 
