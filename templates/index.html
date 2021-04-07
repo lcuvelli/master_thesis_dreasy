@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+
+<html>
+   <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <!-- bootstrap css -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css">
+    <title>Document</title>
+  </head>
+   <body>
+      <div id="menu" align="middle" >
+         <a href="">HOME</a> |
+         <a href="contacts">CONTACTS</a> |
+         <a href="about">ABOUT</a>
+      </div>
+      <div id="content" align="left" bgcolor="white">
+         <h5>Content Articles</h5>
+         <p>Actual content goes here.....</p>
+      </div>
+   </body>
+    {% for item in greetings %}
+          <p>{{item}}</p>
+    {% endfor %}
+
+    <form action="" method="get">
+        <input type="text" name="celsius">
+        <input type="submit" value="Convert">
+    </form>
+
+</html>
+
+<style type='text/css'>
+
+.active{
+    color: orange;
+}
+
+</style>
