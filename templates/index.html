@@ -20,21 +20,57 @@
          <p>Actual content goes here.....</p>
       </div>
    </body>
-    {% for item in greetings %}
-          <p>{{item}}</p>
-    {% endfor %}
 
     <form action="" method="get">
-        <input type="text" name="celsius">
-        <input type="submit" value="Convert">
+        <ul>
+        <li> Ambient relative humidity (RHamb): <input type="number" step="0.1" name="RHamb" min="0" max="100" required> % </li>
+        <li> Ambient temperature (Tamb): <input type="number" step="0.1" min="273.2" name="Tamb" required> K </li>
+        <li> Mass of product to dry (M0): <input type="number" step="0.1" min="0" name="M0" required> kg</li>
+        <li> Initial moisture of products (X0): <input type="number" min="0" step="0.1" name="X0" required> kg water/kg dry product </li>
+        <li> Final moisture of products (Xf): <input type="number" min="0" step="0.1" name="Xf" required> kg water/kg dry product </li>
+        <li> Driying time (td): <input type="number" step="0.1" min="0" max="24" name="td" required> h </li>
+        <li> Driying temperature (Td): <input type="number" step="0.1" min="273.2" name="Td" required> K </li>
+
+
+        <li> <input type="submit" value="Compute"> </li>
+        </ul>
     </form>
 
+   {% if Q == null or Q == "" %}
+   <b> Please fill all attributes.</b>
+
+   {% else %}
+   Your air flow rate should be : <b> {{Q}} kg humid air/s </b>
+   {% endif %}
+
+    <div class="container">
+        {% for message in get_flashed_messages() %}
+        <div class="alert alert-warning">
+            <!-- <button type="button" class="btn-close" aria-label="close" data-dismiss="alert">&times;</button>-->
+            {{ message }}
+        </div>
+        {% endfor %}
+    </div>
+
+</div>
+
+
 </html>
+
+
 
 <style type='text/css'>
 
 .active{
     color: orange;
 }
+
+
+
+input:valid {
+  border: 1px solid green;
+}
+
+
 
 </style>

@@ -52,8 +52,22 @@ def mean_ambient_air_humidity(RHamb: float, Tamb: float) -> float:
     return Yamb
 
 def minimal_air_flow_rate(Yamb: float, M0: float, X0: float, Xf: float, td: float, Td: float) -> float:
+    """Returns the minimal air flow rate defined as the air flow rate that would lead to an air
+    saturated with water at the exit of the dryer.
+
+    Args:
+        Yamb: air humidity - kg water/kg dry air
+        M0: initial mass of product - kg
+        X0: initial moisture of products - kg water/kg dry product
+        Xf: final moisture of products - kg water/kg dry product
+        td: drying time - hours
+        Td : drying temperature - K
+
+    Returns:
+        Qmin: minimal air flow rate"""
 
     x = symbols('x')
+    td = td * 3600
     Ysat_Td = absolute_humidity_air_saturated(Td)
     expr = x * (Ysat_Td-Yamb)/(1+Yamb) - M0/(1+X0)*(X0-Xf)*1/td
 
@@ -62,7 +76,41 @@ def minimal_air_flow_rate(Yamb: float, M0: float, X0: float, Xf: float, td: floa
     return float(Qmin[0])
 
 def air_flow_rate(Qmin: float, F:float) -> float:
+    """Return air flow rate
+
+    Args:
+        Qmin: minimal air flow rate
+        F: design coefficient """
+
     Q = F * Qmin
+    return Q
+
+
+def compute_air_flow_rate(RHamb: float, Tamb: float, M0: float, X0: float, Xf: float, td: float, Td: float)->float:
+
+    F = 12
+    RHamb = RHamb / 100
+    Yamb = mean_ambient_air_humidity(RHamb, Tamb)
+    print("Données : \n",
+          "M0 : ", M0, " kg \n",
+          "X0 : ", X0, " kg water / kg dry product \n",
+          "Xf : ", Xf, " kg water / kg dry product \n",
+          "td : ", td * 3600, " s or ", td, "h \n",
+          "Td : ", Td, " K or", Td - 273.15, "°C \n",
+          "Tamb : ", Tamb, " K or", Tamb - 273.15, "°C \n",
+          "RHamb : ", RHamb, " / \n"
+                             "-----------------")
+    print("Yamb is: ", round(Yamb, 5), " kg of water/kg of dry air")
+    print("Masse d'eau initiale : ", M0 / (1 + X0) * (X0), " kg d'eau")
+    print("Masse d'eau à évaporer : ", M0 / (1 + X0) * (X0 - Xf), " kg d'eau \n -----------------")
+
+    Qmin = minimal_air_flow_rate(Yamb, M0, X0, Xf, td, Td)
+    print("Qmin is : ", round(Qmin, 5), " kg humid air / s")
+
+
+    Q = air_flow_rate(Qmin, F)
+    print("Q is : ", round(Q, 5), " kg humid air / s, using factor F = ", F)
+
     return Q
 
 
@@ -77,9 +125,8 @@ def main():
     X0 = 7      # kg water / kg dry product
     Xf = 0.1    # kg water / kg dry product
     M0 = 10     # kg
-    td = 6.5*3600 # seconds
+    td = 6.5 # seconds
     Td = 62.5+273.15 # K
-    #print(absolute_humidity_air_saturated(Td))
     print("Données : \n",
           "M0 : ", M0, " kg \n",
           "X0 : ", X0, " kg water / kg dry product \n",

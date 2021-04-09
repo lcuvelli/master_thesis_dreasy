@@ -1,22 +1,46 @@
 from flask import Flask, render_template
-from flask import request, escape
-import air_flow_rate as calc
+from flask import request, escape, flash, Markup
+import air_flow_rate as airflow
 
 
 
 app = Flask(__name__)
+app.secret_key = "key"
+
 
 @app.route("/")
 def index():
-    air_flow = str(calc.main())
-    celsius = str(escape(request.args.get("celsius", "")))
-    print(type(celsius))
-    print(celsius)
-    if celsius:
-        fahrenheit = fahrenheit_from(celsius)
-    else :
-        fahrenheit = ""
-    return "Fahrenheit: " + fahrenheit + render_template('index.html', greetings=celsius) + "TEST: " + air_flow
+    Q = ""
+    RHamb = request.args.get("RHamb", type=float)
+    Tamb = request.args.get("Tamb", type=float)
+    M0 = request.args.get("M0", type=float)
+    X0 = request.args.get("X0", type=float)
+    Xf = request.args.get("Xf", type=float)
+    td = request.args.get("td", type=float)
+    Td = request.args.get("Td", type=float)
+
+    i = 0
+
+    if RHamb and Tamb and M0 and X0 and Xf and td and Td:
+        if Xf > X0   :
+            message = Markup('Warning: Final moisture content of the product (Xf) should be <b>lower</b> than inital moisture (X0).')
+            i += 1
+            flash(message)
+
+        if Tamb >= Td :
+            message = Markup('Warning: Ambient temperature (Tamb) should be <b>lower</b> than drying temperature (Td).')
+            flash(message)
+            i += 1
+
+        elif (i==0):
+            Q = airflow.compute_air_flow_rate(RHamb, Tamb, M0, X0, Xf, td, Td)
+            print(Q)
+
+    return render_template('index.html', Q=Q)
+
+
+
+
 
 def fahrenheit_from(celsius):
     """Convert Celsius to Fahrenheit degrees."""
