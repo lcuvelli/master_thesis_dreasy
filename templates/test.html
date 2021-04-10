@@ -1,34 +1,26 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <!-- bootstrap css -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css">
-    <title>Document</title>
-  </head>
-  <body>
-    <!-- bootstrap javascript -->
-    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
-    <button type="button" class="btn btn-primary">Primary</button>
-    <nav class="nav justify-content-center">
-      <a class="nav-link active" href="#">Accueil</a>
-      <a class="nav-link" href="#">A propos</a>
-      <a class="nav-link" href="#">Services</a>
-      <a class="nav-link" href="#">Contact</a>
-    </nav>
+{% extends "nav.html" %}
+{% block navbar %}
+{{ super() }}
+{% endblock %}
+
+{% block head %}
+  {{ super() }}
+{% endblock %}
+
+{% block title %} Minimal Air flow Rate {% endblock %}
+
+{% block content %}
+  <h1>Index</h1>
+  <p class="important">
+    Welcome on my awesome homepage.
+  <button type="button" class="btn btn-primary">Primary</button>
 
 
-  </body>
-</html>
+{% endblock %}
 
-<style type='text/css'>
 
-.active{
-    color: orange;
-}
 
-</style>
+
+
+
+

@@ -1,28 +1,19 @@
-<!DOCTYPE html>
+{% extends "nav.html" %}
+{% block navbar %}
+{{ super() }}
+{% endblock %}
 
-<html>
-   <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <!-- bootstrap css -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css">
-    <title>Drying is fun</title>
+{% block head %}
+  {{ super() }}
+{% endblock %}
 
-  </head>
+{% block title %} Minimal Air flow Rate {% endblock %}
 
-   <body>
-      <div id="menu" align="middle" >
-         <a href="">HOME</a> |
-         <a href="contacts">CONTACTS</a> |
-         <a href="about">ABOUT</a>
-      </div>
-      <div id="content" align="left" bgcolor="white">
-         <h5>Calculating minimal airflow for dryer</h5>
-      </div>
-   </body>
+{% block page %} Calculating minimal airflow for dryer {% endblock %}
 
-    <form action="" method="get">
+{% block content %}
+
+<form action="" method="get">
         <ul>
         <li> Ambient relative humidity (RHamb): <input type="number" step="0.1"  name="RHamb" min="0" max="100" required> % </li>
         <li> Ambient temperature (Tamb): <input type="number" step="0.1" min="273.2" name="Tamb" required> K </li>
@@ -57,6 +48,18 @@
         </div>
         {% endfor %}
     </div>
+
+
+
+<button type="button" class="btn btn-primary">Primary</button>
+
+{% endblock %}
+
+
+
+
+
+
 
 
 
