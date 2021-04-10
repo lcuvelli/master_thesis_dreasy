@@ -1,6 +1,7 @@
 from flask import Flask, render_template
 from flask import request, escape, flash, Markup
 import air_flow_rate as airflow
+import sys
 
 
 
@@ -10,7 +11,9 @@ app.secret_key = "key"
 
 @app.route("/")
 def index():
+    print('Hello world!', file=sys.stderr)
     Q = ""
+    mass_to_evaporate = ""
     RHamb = request.args.get("RHamb", type=float)
     Tamb = request.args.get("Tamb", type=float)
     M0 = request.args.get("M0", type=float)
@@ -33,10 +36,16 @@ def index():
             i += 1
 
         elif (i==0):
+            mass_to_evaporate = M0 / (1 + X0) * (X0 - Xf)
             Q = airflow.compute_air_flow_rate(RHamb, Tamb, M0, X0, Xf, td, Td)
+            if Q < 0 :
+                message = Markup(
+                    'Error: Minimal air flow is negative. Not feasible with conditions given. Please try again.')
+                flash(message)
+
             print(Q)
 
-    return render_template('index.html', Q=Q)
+    return render_template('index.html', Q=Q, mass_to_evaporate = mass_to_evaporate)
 
 
 

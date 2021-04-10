@@ -37,7 +37,7 @@ e = 6 / 1000  # m - Thickness of the slices of product
 
 Lc = 0.5  # m - Hydraulic diamater #TODO: how to fix this parameter ?
 h_star = 10                        #TODO: how to fix this parameter ?
-Td = 70     # °C - mean temperature at the end of the heating section along the day #TODO: discuss
+Td = 60     # °C - mean temperature at the end of the heating section along the day #TODO: discuss
 Tmax = 90   # °C - maximal Tair allowed at the end of the heating section along the day #TODO: discuss function product
 tol = 1     # °C (or K) - tolerance on the mean temperature in the dryer
 
