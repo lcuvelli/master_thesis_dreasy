@@ -10,58 +10,137 @@
 {% block title %} Minimal Air flow Rate {% endblock %}
 
 {% block content %}
-  <form>
-  <div class="row mb-3">
-    <label for="inputEmail3" class="col-sm-2 col-form-label">Email</label>
-    <div class="col-sm-10">
-      <input type="email" class="form-control" id="inputEmail3">
+  <form action="" method="get">
+    <b>Climatic data : </b>
+
+  <div class="row xl-3">
+    <label class="col-xl-4 "> Diurnal direct and diffuse solar radiation flux (S<sub>m</sub>): </label>
+    <div class="col-xl-3">
+      <input type="number" step="0.1"  name="Sm" min="0" required value="{{ context['Sm'] }}" > W/m<sup>2</sup>
     </div>
   </div>
-  <div class="row mb-3">
-    <label for="inputPassword3" class="col-sm-2 col-form-label">Password</label>
-    <div class="col-sm-10">
-      <input type="password" class="form-control" id="inputPassword3">
+
+    <div class="row xl-3">
+    <label class="col-xl-4 "> Diurnal atmospheric infrared radiation flux (I<sub>atm</sub> ): </label>
+    <div class="col-xl-3">
+      <input type="number" step="0.1"  name="Iatm" min="0" required value="{{ context['Iatm'] }}" > W/m<sup>2</sup>
     </div>
   </div>
-  <fieldset class="row mb-3">
-    <legend class="col-form-label col-sm-2 pt-0">Radios</legend>
-    <div class="col-sm-10">
-      <div class="form-check">
-        <input class="form-check-input" type="radio" name="gridRadios" id="gridRadios1" value="option1" checked>
-        <label class="form-check-label" for="gridRadios1">
-          First radio
-        </label>
-      </div>
-      <div class="form-check">
-        <input class="form-check-input" type="radio" name="gridRadios" id="gridRadios2" value="option2">
-        <label class="form-check-label" for="gridRadios2">
-          Second radio
-        </label>
-      </div>
-      <div class="form-check disabled">
-        <input class="form-check-input" type="radio" name="gridRadios" id="gridRadios3" value="option3" disabled>
-        <label class="form-check-label" for="gridRadios3">
-          Third disabled radio
-        </label>
-      </div>
-    </div>
-  </fieldset>
-  <div class="row mb-3">
-    <div class="col-sm-10 offset-sm-2">
-      <div class="form-check">
-        <input class="form-check-input" type="checkbox" id="gridCheck1">
-        <label class="form-check-label" for="gridCheck1">
-          Example checkbox
-        </label>
-      </div>
+
+  <div class="row xl-3">
+    <label class="col-xl-4">Ambient temperature (T<sub>amb</sub>):</label>
+    <div class="col-xl-3">
+      <input type="number" step="0.1" min="273.2"  max="373" name="Tamb" required value="{{ context['Tamb'] }}"> K
     </div>
   </div>
-  <button type="submit" class="btn btn-primary">Sign in</button>
+
+    <div class="row xl-3">
+    <label class="col-xl-4">Ambient relative humidity (RH<sub>amb</sub>):</label>
+    <div class="col-xl-3">
+        <input input type="number" step="0.1"  name="RHamb" min="0" max="100" required value="{{ context['RHamb'] }}"> %
+    </div>
+  </div>
+
+    <div class="row xl-3">
+    <label class="col-xl-4">Time of sunrise (t<sub>rise</sub>):</label>
+    <div class="col-xl-3">
+      <input type="number" step="0.1" min="0"  max="24" name="trise" required value="{{ context['trise'] }}"> h
+    </div>
+  </div>
+
+    <div class="row xl-3">
+    <label class="col-xl-4">Time of sunset (t<sub>set</sub>):</label>
+    <div class="col-xl-3">
+      <input type="number" step="0.1" min="0"  max="24" name="tset" required value="{{ context['tset'] }}"> h
+    </div>
+  </div>
+    <p></p>
+
+    <b>Specifications : </b>
+
+    <div class="row xl-3">
+    <label class="col-xl-4">Aspect ratio (R):</label>
+    <div class="col-xl-3">
+      <input type="number" step="0.1" min="0"  max="24" name="R" required value="{{ context['R'] }}">
+    </div>
+  </div>
+
+    <div class="row xl-3">
+    <label class="col-xl-4">Driying time (t<sub>d</sub>):</label>
+    <div class="col-xl-3">
+        <input type="number" step="0.1" min="0" max="24" name="td" required value="{{ context['td'] }}"> h
+    </div>
+  </div>
+
+    <div class="row xl-3">
+    <label class="col-xl-4">Driying temperature (T<sub>d</sub>):</label>
+    <div class="col-xl-3">
+        <input type="number" step="0.1" min="273.2" name="Td" max="373" required value="{{ context['Td'] }}"> K
+    </div>
+  </div>
+
+    <div class="row xl-3">
+    <label class="col-xl-4">Air flow rate (Q):</label>
+    <div class="col-xl-3">
+        <input type="number" step="0.1" min="0" name="Q" required value="{{ context['Q'] }}"> kg humid air/s
+    </div>
+  </div>
+
+    <div class="row xl-3">
+    <label class="col-xl-4">Mass of product to dry (M0):</label>
+    <div class="col-xl-3">
+        <input type="number" step="0.1" min="0" name="M0" required value="{{ context['M0'] }}"> kg
+    </div>
+  </div>
+
+
+
+
+  <button type="submit" value="Compute" name = "Compute" class="btn btn-primary">Compute dryer heating section lenght</button>
+
 </form>
 
+<div class="solution">
+
+  {% if context['t0'] == null or context['t0'] == "" %}
+   <b> Please fill all attributes.</b>
+
+   {% else %}
+  You should start your drying at <b> {{ context['t0'] }} h </b> <br>
+
+   {% endif %}
+
+  </div>
+
+<div class="container">
+        {% for message in get_flashed_messages() %}
+        <div class="alert alert-warning">
+            <!-- <button type="button" class="btn-close" aria-label="close" data-dismiss="alert">&times;</button>-->
+            {{ message }}
+        </div>
+        {% endfor %}
+    </div>
+
+
 <style>
-  .input {
-    color:green;
+  form {
+    background-color:#D3D3D3;
+    padding-left: 10px;
+  }
+
+  input {
+  width: 50%;
+
+  }
+
+  .solution{
+  padding-top: 10px;
+  padding-left: 10px;
+  }
+
+  .container{
+  padding-top: 10px;
+  padding-left: 10px;
   }
 </style>
 

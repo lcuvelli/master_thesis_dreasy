@@ -4,6 +4,7 @@ from flask_socketio import SocketIO, emit
 
 import time
 import air_flow_rate as airflowlib
+import heating_section as heatsectionlib
 
 app = Flask(__name__)
 app.secret_key = "key"
@@ -37,8 +38,48 @@ def about():
 
 @app.route("/t")
 def test():
-    return render_template("test.html")
-    return '<meta http-equiv="refresh" content="5" /> Hello World!<br>The current time is {}.""".format(datetime.strftime(datetime.now(), "%d %B %Y %X"))'
+
+    # Climatic data
+    Sm = request.args.get("Sm", type=float)
+    RHamb = request.args.get("RHamb", type=float) #TODO: already input in airflow
+    Tamb = request.args.get("Tamb", type=float) #TODO: already input in airflow
+    trise = request.args.get("trise", type=float)
+    tset = request.args.get("tset", type=float)
+    Iatm = request.args.get("Iatm", type=float)
+
+    # Specifications
+    R = request.args.get("R", type=float)
+    if not R :
+        R = 1.5
+    td = request.args.get("td", type=float) #TODO: already input in airflow
+    t0 = ""
+    Td = request.args.get("Td", type=float) #TODO: already input in airflow
+    Q = request.args.get("Q", type=float)  #TODO: already input in airflow
+    M0 = request.args.get("M0", type=float) #TODO: already input in airflow
+
+    i = 0
+    if request.method == 'GET':
+        if request.args.get('Compute') == 'Compute':
+
+            if tset <= trise:
+                message = Markup(
+                    'Warning: Sunrise time (t<sub>rise</sub>) <b>before</b> sunset time ((t<sub>set</sub>).')
+                i += 1
+                flash(message)
+
+            if td > tset - trise:
+                message = Markup(
+                    'Warning: Drying time (t<sub>d</sub>) is <b>bigger</b> than day time. The drying should be done in a day.')
+                i += 1
+                flash(message)
+
+            if i == 0 :
+                t0 = heatsectionlib.start_time_drying(td, tset, trise)
+
+    context = {"RHamb": RHamb, "Tamb": Tamb, "Sm": Sm, "trise": trise, "tset": tset,
+               "R": R, "td": td, "t0": t0, "Iatm": Iatm, "Q": Q, "Td": Td, "M0": M0}
+
+    return render_template("test.html", context=context)
 
 @app.route("/airflow")
 def airflow():
@@ -69,7 +110,7 @@ def airflow():
 
         elif (i==0):
             mass_to_evaporate = M0 / (1 + X0) * (X0 - Xf)
-            Q = airflowlib.compute_air_flow_rate(RHamb, Tamb, M0, X0, Xf, td, Td)
+            Q = round(airflowlib.compute_air_flow_rate(RHamb, Tamb, M0, X0, Xf, td, Td), 5)
             if Q < 0 :
                 message = Markup(
                     'Error: Minimal air flow is negative. Not feasible with conditions given. Please try again.')

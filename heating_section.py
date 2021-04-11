@@ -30,16 +30,16 @@ Q = 0.03  # kg of humid air/s - Air flow rate
 Wd = 1.4  # m - Width of the dryer
 k = 0.85  # Reduction factor
 M0 = 10   # kg - Mass of product
-ep = 0.001 # m - Plastic thickness
-lp = 0.2  # W/m*K - Plastic thermal conductivity
-e = 6 / 1000  # m - Thickness of the slices of product
+#ep = 0.001 # m - Plastic thickness
+#lp = 0.2  # W/m*K - Plastic thermal conductivity
+#e = 6 / 1000  # m - Thickness of the slices of product
 
 
 Lc = 0.5  # m - Hydraulic diamater #TODO: how to fix this parameter ?
 h_star = 10                        #TODO: how to fix this parameter ?
 Td = 60     # °C - mean temperature at the end of the heating section along the day #TODO: discuss
 Tmax = 90   # °C - maximal Tair allowed at the end of the heating section along the day #TODO: discuss function product
-tol = 1     # °C (or K) - tolerance on the mean temperature in the dryer
+tol = 5     # °C (or K) - tolerance on the mean temperature in the dryer
 
 DELTA_Z = 0.5
 DELTA_T = 0.5
@@ -174,7 +174,7 @@ def estimate_length_heating(Tair_LH: list, LH):
 
     Returns:
          -1 if LH has to be decreased
-         1 if LH has to e increased
+         1 if LH has to be increased
          0 otherwise """
 
     # Criteria 1
@@ -203,6 +203,9 @@ def estimate_length_heating(Tair_LH: list, LH):
     return result
 
 
+def start_time_drying(td, tset, trise):
+    t0 = (trise + tset)/2 - td/2
+    return t0
 
 def temperatures_heating_section(LH)->list:
     """Gives the temperature profile at the end of the drying section is calculated for a certain length of the
