@@ -1,61 +1,72 @@
-<!DOCTYPE html>
+<!-- Section: Team v.4 -->
+{% extends "nav.html" %}
+{% block navbar %}
+{{ super() }}
+{% endblock %}
+{% block title %} Contacts {% endblock %}
+{% block page %}
+    <style type="text/css">
+    h3 { color: rgb(19,74,145);
+         text-align: center; }
+    </style>
+    Contact
+  {% endblock %}
 
-<html>
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <!-- bootstrap css -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css">
-    <title>Document</title>
-  </head>
-<h1>Contacts</h1>
+{% block content %}
 
- <div class="row">
-    <div class="column">
-        <img src="/static/Contacts/BHaut.png" alt="Benoit Haut"/>
-        <p> Benoit Haut </p>
+<!-- Section: Team v.1 -->
+<section class="team-section text-center my-5">
+    <div class="container">
+      <div class="row">
+          <div class="col-sm">
+        <img src="/static/Contacts/LCuvelliez.png"
+             class="rounded-circle z-depth-5"
+          alt="Lucie Cuvelliez">
+
+
+      <h5 class="font-weight-bold mt-4 mb-3">Lucie Cuvelliez</h5>
+      <p class="text-uppercase blue-text"><strong>Master student</strong></p>
+      <p class="grey-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent ut tincidunt tellus. Vivamus euismod pellentesque blandit. Donec rutrum dictum eros quis dictum.  </p>
+</div>
+
+    <!-- Grid column -->
+
+    <!-- Grid column -->
+        <div class="col-sm">
+        <img src="/static/Contacts/BHaut.png" class="rounded-circle z-depth-1"
+          alt="Benoit Haut">
+
+      <h5 class="font-weight-bold mt-4 mb-3">Benoit Haut</h5>
+      <p class="text-uppercase blue-text"><strong> XX </strong></p>
+      <p class="grey-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent ut tincidunt tellus. Vivamus euismod pellentesque blandit. Donec rutrum dictum eros quis dictum. </p>
     </div>
-    <div class="column">
-        <img src="/static/Contacts/CBoey.png" alt="Cedric Boey"/>
-        <p> Cedric Boey </p>
+
+    <!-- Grid column -->
+
+    <!-- Grid column -->
+
+        <div class="col-sm">
+        <img src=static/Contacts/CBoey.png class="rounded-circle z-depth-1"
+          alt="Cedric Boey" style="box-sizing: content-box;">
+
+
+      <h5 class="font-weight-bold mt-4 mb-3">Cedric Boey</h5>
+      <p class="text-uppercase blue-text"><strong> XX </strong></p>
+      <p class="grey-text"> Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent ut tincidunt tellus. Vivamus euismod pellentesque blandit. Donec rutrum dictum eros quis dictum. </p>
+        </div>
+          </div>
     </div>
-    <div class="column">
-        <img src="/static/Contacts/LCuvelliez.png" alt="Lucie Cuvelliez"/>
-        <p> Lucie Cuvelliez </p>
-    </div>
- </div>
-</html>
+
+</section>
+
+<!-- Section: Team v.1 -->
 
 
-
- <style type='text/css'>
-
-
-    body {
-        background-color:white;
-   }
-
-    h1 {
-        color: rgb(19,74,145);
-        text-align: center;
-    }
-
-    .row {
-        display: flex;
-    }
-
-    .column {
-        flex: 33.33%;
-        padding: 5px;
-        text-align: center;
-    }
-
+<style>
     img {
-        width: 100px;
+        width: 250px;
         border-radius:  10px  ;
         border: 3px darkgreen ;
     }
-
 </style>
-
+{% endblock %}

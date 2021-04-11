@@ -1,7 +1,7 @@
 <!doctype html>
 <html>
   {% block navbar %}
-  <nav class="nav justify-content-center" style="background-color: rgb(19,74,145);">
+  <nav class="nav justify-content-center" style="background-color: rgb(19,74,145); position: left;">
      <a class="navbar-brand" href="https://polytech.ulb.be/" target="_blank">
             <div class="logo-image">
                   <img src="/static/LogoEPB.png" class="img-fluid">
@@ -9,7 +9,7 @@
       </a>
       <a class="nav-link active" href="#">Accueil</a>
       <a class="nav-link" href="./">Home</a>
-      <a class="nav-link" href="airflow">Air flow</a>
+      <a class="nav-link" href="airflow">Air flow </a>
       <a class="nav-link" href="about">About</a>
       <a class="nav-link" href="contacts">Contacts</a>
     </nav>
@@ -135,11 +135,12 @@
 }
 
 .logo-image{
-    width: 46px;
-    height: 46px;
+    width: 40px;
+    height: 40px;
     border-radius: 50%;
     overflow: hidden;
     margin-top: -6px;
+    left: 10px;
 }
 
 </style>

@@ -5,18 +5,7 @@ import sys
 
 app = Flask(__name__)
 app.secret_key = "key"
-#Bootstrap(app)
 
-#nav.init_app(app)
-
-
-nav = Markup('<nav class="nav justify-content-center" style="background-color: rgb(19,74,145) ">'
-             + '<a class="nav-link active" href="#">Accueil</a>'
-             + '<a class="nav-link" href="./">Home</a> '
-             + '<a class="nav-link" href="about">About</a>'
-             + '<a class="nav-link" href="contacts">Contacts</a>'
-             + ' </nav>')
-print(nav)
 
 @app.route("/")
 def index():
@@ -55,7 +44,7 @@ def index():
             print(Q)
     context = {"active": "Miniaml Air Flow"}
 
-    return render_template('index.html', nav=nav, Q=Q, mass_to_evaporate = mass_to_evaporate, context=context)
+    return render_template('index.html', Q=Q, mass_to_evaporate = mass_to_evaporate, context=context)
 
 
 
@@ -115,9 +104,3 @@ def airflow():
 
 if __name__ == "__main__":
     app.run(host="127.0.0.1", port=8080, debug=True)
-
-
-#
-# if __name__ == "__main__":
-#     celsius = input("Celsius: ")
-#     print("Fahrenheit:", fahrenheit_from(celsius))
