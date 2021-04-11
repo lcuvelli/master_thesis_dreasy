@@ -1,15 +1,30 @@
 from flask import Flask, render_template
 from flask import request, flash, Markup
+from flask_socketio import SocketIO, emit
+
+import time
 import air_flow_rate as airflowlib
 
 app = Flask(__name__)
 app.secret_key = "key"
+socketio = SocketIO(app)
 
+
+def test_main():
+    print("hello")
+    time.sleep(5)
+    print("hello again")
 
 @app.route("/")
 def home():
     return render_template('home.html')
 #TODO: nav.html logo renders strangely when changing page
+
+@app.route("/dryer_dimensions")
+def dryer_dimensions():
+    context = {"computing": True}
+    return render_template('dryerdimensions.html', context = context)
+
 
 @app.route("/contacts")
 def contacts():
@@ -22,7 +37,8 @@ def about():
 
 @app.route("/t")
 def test():
-    return render_template('test.html')
+    return render_template("test.html")
+    return '<meta http-equiv="refresh" content="5" /> Hello World!<br>The current time is {}.""".format(datetime.strftime(datetime.now(), "%d %B %Y %X"))'
 
 @app.route("/airflow")
 def airflow():

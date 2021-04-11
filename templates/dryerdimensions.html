@@ -1,0 +1,24 @@
+{% extends "nav.html" %}
+{% block navbar %}
+{{ super() }}
+{% endblock %}
+
+{% block title %} Dimensions of the solar dryer {% endblock %}
+
+{% block page %} Calculating dimensions of the solar dryer {% endblock %}
+
+{% block content %}
+    Add explanations about the project
+
+    {% if context['computing'] == true %}
+
+    <div class="text-center">
+        Computation might take a few minutes...
+      <div class="spinner-border" role="status">
+
+      </div>
+    </div>
+    {% endif %}
+{% endblock %}
+
+
