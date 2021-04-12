@@ -3,13 +3,15 @@ import heat_transfer_coefficient as libh
 from scipy.optimize import fsolve
 from numpy import isclose, polyfit
 import matplotlib.pyplot as plt
+from math import sqrt, pow
+import tools as tools
 import tikzplotlib
 
 from math import exp, pi, sin
 
 
 """Constants"""
-Ca = 1009 # Heat capacity air, J/kg/K
+Ca = 1009 # Heat capacity air, J/kg/K (assumed constant)
 
 """Climatic data - Cambodia"""
 Sm = 463  # W/m2
@@ -19,8 +21,8 @@ t_set = 19  # h - Time sunset
 t0 = 9.5    # h - Start of drying
 td = 6.5    # h - Drying time
 tf = td + t0  #h - End of drying
-RHamb = 70  # %
 Iatm = 377  # W/m2
+
 
 
 
@@ -35,28 +37,36 @@ M0 = 10   # kg - Mass of product
 #e = 6 / 1000  # m - Thickness of the slices of product
 
 
-Lc = 0.5  # m - Hydraulic diamater #TODO: how to fix this parameter ?
-h_star = 10                        #TODO: how to fix this parameter ?
+Lc = 0.7  # m - Hydraulic diamater #TODO: how to fix this parameter ?
+Lsup = 1.51 # m
+#h_star = 10                        #TODO: how to fix this parameter ?
 Td = 60     # °C - mean temperature at the end of the heating section along the day #TODO: discuss
 Tmax = 90   # °C - maximal Tair allowed at the end of the heating section along the day #TODO: discuss function product
 tol = 5     # °C (or K) - tolerance on the mean temperature in the dryer
 
-DELTA_Z = 0.5
+DELTA_Z = 0.1
 DELTA_T = 0.5
 ADD_STORAGE = True
 STORAGE = {}
+
+def lenght_sup_dryer(H, h, Wd):
+    """Calculates superior length of the dryer when cross section is trapezoidal"""
+    Lsup = sqrt(pow((H - h), 2) + pow(Wd, 2))
+    return Lsup
+
+def hydaulic_diameter(H, h, Wd):
+    """Calculates hydraulic parameter defined as the ratio of 4 times the surface by the perimeter"""
+    Lsup = lenght_sup_dryer(H,h,Wd)
+    S = h * Wd + Wd * h / 2
+    P = H + h + Wd + Lsup
+
+    Lc = 4 * S / P
+    return Lc
 
 
 def direct_diffuse_solar_radiation(Sm: float, t_set: float, t_rise: float, t: float) -> float:
     S = pi/2 * Sm * sin(pi * (t - t_rise)/(t_set-t_rise))
     return S
-
-def toCelsius(T: list):
-    """Converts a list of temperatures in Kelvin to Celsius"""
-    res = []
-    for elem in T:
-        res.append(elem-273)
-    return res
 
 
 def temperature_time_t(Tamb, t, LH)->list:
@@ -113,13 +123,14 @@ def balance_equations_heating(vars, *data):
         Tair: air temperature at one slice of the heating section (cross section in z) (in K)
         t: time of the day """
 
-    Tair, t = data
+    Tair, t, Iatm, Sm, tset, trise, Tamb, Lc, R, k = data
 
     Tp, Tfl, P = vars # T in K, P is in W/m2
 
     # Heat transfer coefficients depend on the temperatures
     h_fl_air = libh.convective_heat_transfer_coefficient(Tfl, Tair, Lc)
     h_p_air = libh.convective_heat_transfer_coefficient(Tp, Tair, Lc)
+    h_star = 10 #libh.convective_heat_transfer_coefficient(Tp, Tamb, Lsup)
 
     eq1 = Iatm + direct_diffuse_solar_radiation(Sm, t_set, t_rise, t) - h_star * (Tp - Tamb) - libh.infrared_energy_flux(Tp)
     eq2 = P - h_fl_air * (Tfl - Tair) - h_p_air * (Tp - Tair) * R
@@ -129,7 +140,7 @@ def balance_equations_heating(vars, *data):
 
 
 
-def Tair_z_plus_dz(P, Tair):
+def Tair_z_plus_dz(P, Tair, Q, Ca, Wd):
     """Gives the temperature of the air in the heating section in (z + dz) when Tair and P are known in z.
 
         Args:
@@ -140,28 +151,6 @@ def Tair_z_plus_dz(P, Tair):
     Tair_next =  Tair + P * Wd / (Q * Ca) * dz
 
     return Tair_next
-
-
-def darboux_sum(y: list, dt)->float:
-    """Gives the Darboux sum, computed as the mean value between the lower and upper Darboux.
-
-    Args:
-        y: List of the value of the function on the interval [0, len(y)]
-        dt: length of the subinterval of the partition """
-
-    lower_sum = 0
-    upper_sum = 0
-
-    for i in range(len(y) - 1):
-        inf = min(y[i], y[i+1])
-        sup = max(y[i], y[i+1])
-
-        lower_sum += inf * dt
-        upper_sum += sup * dt
-    print("Lower Darboux sum:", lower_sum)
-    print("Upper Darboux sum:", upper_sum)
-
-    return (lower_sum + upper_sum)/2
 
 def estimate_length_heating(Tair_LH: list, LH):
     """Estimates the optimal length of the drying part with two criteria (not used simultaneously)
@@ -189,7 +178,7 @@ def estimate_length_heating(Tair_LH: list, LH):
 
 
     # Criteria 2
-    mean_temperature = darboux_sum(Tair_LH, DELTA_T) / td
+    mean_temperature = tools.darboux_sum(Tair_LH, DELTA_T) / td
     print("with LH = ", LH, " mean Td is : ", mean_temperature, " °C")
     if abs(mean_temperature - Td) < tol :
         result = 0
@@ -224,14 +213,9 @@ def temperatures_heating_section(LH)->list:
 
     return profile_end_heating
 
-def key_satifies_condition(k, zmax):
-    "Used to filter the dictionary STORAGE, the key (t,z) satisfies condition if z = zmax"
-    length = k[0]
-    return (length == zmax)
-
 def filter_dictionnary(zmax):
     "Filters the dictionnary for all values of z == zmax. Returns the filtered dictionnary"
-    filtered_dic = {k: v for (k, v) in STORAGE.items() if key_satifies_condition(k,zmax)}
+    filtered_dic = {k: v for (k, v) in STORAGE.items() if tools.key_satifies_condition(k,zmax)}
     return filtered_dic
 
 def find_next_value(test_length_heating, res, LH, intervals_z):
@@ -250,38 +234,15 @@ def find_next_value(test_length_heating, res, LH, intervals_z):
         upper = min([i for i in test_length_heating if i >= LH], key=lambda x: abs(x - LH))
         next = upper + (LH - upper) / 2
 
-    next_rounded = min(intervals_z, key=lambda x:abs(x-next))
+    next_rounded = round(next,1)
     print("Next value to try should be ", next, " but is rounded to ", next_rounded)
-
-
     return next_rounded
 
-def extract_temperature_air(filtered_storage):
-    """From the filtered dictionnary, extract Tair for t from t0 to tf """
-
-    temperature_air = []
-    for key in filtered_storage:
-        temperature_air.append(filtered_storage[key][3])
-
-    return temperature_air
-
-def extract_energy_flux(filtered_storage):
-    """From the filtered dictionnary, extract P for t from t0 to tf """
-
-    energy_flux = []
-    for key in filtered_storage:
-        energy_flux.append(filtered_storage[key][2])
-
-    return energy_flux
-
-def main():
-    LH = 15
-    air = 3     # Tair is the 4th element of vector x
+def compute_heating_length():
+    LH = 5
+    air = 3  # Tair is the 4th element of vector x
     energy = 2  # P is the 3rd element of vector x
-    Tair_LH = []
-    P_LH = []
-    intervals = []
-    intervals_z = [] # All the value of z tested
+    Tair_LH, P_LH, intervals_z, intervals = [], [], [], []
     z = 0
     while z <= LH:
         intervals_z.append(z)
@@ -290,12 +251,12 @@ def main():
     global ADD_STORAGE
     ADD_STORAGE = True
 
-    profile_end_heating =  temperatures_heating_section(LH)
+    profile_end_heating = temperatures_heating_section(LH)
     ADD_STORAGE = False
 
     # Get Tair and P profile in z = LH and
     for i in range(len(profile_end_heating)):
-        Tair_LH.append(profile_end_heating[i][air]-273) # Converting temperature from K to °C
+        Tair_LH.append(profile_end_heating[i][air] - 273)  # Converting temperature from K to °C
         P_LH.append(profile_end_heating[i][energy])
 
     t = t0
@@ -308,7 +269,6 @@ def main():
     test_length_heating = [0]  # Keeps track of the LH values tested
 
     while res != 0 and (len(test_length_heating) == len(set(test_length_heating))):
-
         new_LH = find_next_value(test_length_heating, res, LH, intervals_z)
         print("Next value is: ", new_LH)
         test_length_heating.append(LH)
@@ -316,18 +276,14 @@ def main():
 
         print("List of trials ", test_length_heating, " now we try ", LH)
         filtered_storage = filter_dictionnary(LH)
-        Tair_LH = toCelsius(extract_temperature_air(filtered_storage))
+        Tair_LH = tools.toCelsius(tools.extract_temperature_air(filtered_storage))
         res = estimate_length_heating(Tair_LH, LH)
-    P_LH = extract_energy_flux(filtered_storage)
+    P_LH = tools.extract_energy_flux(filtered_storage)
     print(P_LH)
     print(Tair_LH)
 
-    #TODO: si condition d'arrêt est que la même valeur a été testée deux foix, il faudrait recalculer plus petit dz ou interpolation (linéaire)
-
-
-
-
     draw_profiles(Tair_LH, P_LH, intervals, LH)
+
 
 
 def draw_profiles(Tair_LH: list, P_LH: list, intervals: list, LH):
