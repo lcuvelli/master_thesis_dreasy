@@ -59,13 +59,6 @@
     <b>Specifications : </b>
 
     <div class="row xl-3">
-    <label class="col-xl-4">Aspect ratio (R):</label>
-    <div class="col-xl-3">
-      <input type="number" step="0.1" min="0"  max="24" name="R" required value="{{ context['R'] }}">
-    </div>
-  </div>
-
-    <div class="row xl-3">
     <label class="col-xl-4">Driying time (t<sub>d</sub>):</label>
     <div class="col-xl-3">
         <input type="number" step="0.1" min="0" max="24" name="td" required value="{{ context['td'] }}"> h
@@ -93,10 +86,68 @@
     </div>
   </div>
 
+    <div class="row xl-3">
+    <label class="col-xl-4">Reduction factor (k):</label>
+    <div class="col-xl">
+        <input type="number" step="0.1" min="0" name="k" required value="{{ context['k'] }}"> (depends of plastic and wood structure)
+    </div>
+  </div>
 
 
+    <p></p>
+    <button type="submit" value="Compute" name = "Compute" class="btn btn-primary">Compute dryer heating section lenght</button>
+    <p></p>
 
-  <button type="submit" value="Compute" name = "Compute" class="btn btn-primary">Compute dryer heating section lenght</button>
+    <b> Design of the dryer : </b>
+    <div class="row xl-3">
+    <label class="col-xl-4">Aspect ratio (R = W<sub>p</sub> / W<sub>d</sub>):</label>
+    <div class="col-xl-3">
+      <input disabled type="number" step="0.1" min="0"  name="R" required value="{{ context['R'] }}">
+    </div>
+  </div>
+
+     <div class="row xl-3">
+       <label class="col-xl-4">Length cross section of plastic (W<sub>p</sub> = L<sub>sup</sub> + h + H):</label>
+    <div class="col-xl-3">
+      <input disabled type="number" step="0.1" min="0" name="Wp" required value="{{ context['Wp'] }}"> m
+    </div>
+  </div>
+
+    <div class="row xl-3">
+    <label class="col-xl-4">Width of the dryer (W<sub>d</sub>):</label>
+    <div class="col-xl-3">
+      <input disabled type="number" step="0.1" min="0" name="Wd" required value="{{ context['Wd'] }}"> m
+    </div>
+  </div>
+
+
+    <div class="row xl-3">
+    <label class="col-xl-4">Small height (h):</label>
+    <div class="col-xl-3">
+      <input disabled type="number" step="0.1" min="0" name="h" required value="{{ context['h'] }}"> m
+    </div>
+  </div>
+    <div class="row xl-3">
+    <label class="col-xl-4">Big height (H):</label>
+    <div class="col-xl-3">
+      <input disabled type="number" step="0.1" min="0" name="H" required value="{{ context['H'] }}"> m
+    </div>
+  </div>
+    <div class="row xl-3">
+    <label class="col-xl-4">Superior length (L<sub>sup</sub>):</label>
+    <div class="col-xl-3">
+      <input disabled type="number" step="0.1" min="0" name="Lsup" required value="{{ context['Lsup'] }}"> m
+    </div>
+  </div>
+
+    <div class="row xl-3">
+    <label class="col-xl-4">Hydraulic diameter (L<sub>c</sub> = 4S / P):</label>
+    <div class="col-xl-3">
+      <input disabled type="number" step="0.1" min="0" name="Lc" required value="{{ context['Lc'] }}"> m
+    </div>
+  </div>
+
+
 
 </form>
 
@@ -133,7 +184,7 @@
   }
 
   input {
-  width: 50%;
+  width: 150px;
 
   }
 

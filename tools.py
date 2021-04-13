@@ -18,8 +18,6 @@ def darboux_sum(y: list, dt)->float:
 
         lower_sum += inf * dt
         upper_sum += sup * dt
-    print("Lower Darboux sum:", lower_sum)
-    print("Upper Darboux sum:", upper_sum)
 
     return (lower_sum + upper_sum)/2
 

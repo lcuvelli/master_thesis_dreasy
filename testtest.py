@@ -26,3 +26,8 @@ print(hydaulic_diameter(0.5,0.3,1.5))
 
 print("h*:", libh.convective_heat_transfer_coefficient(300, 330, 1.5))
 print("hnormal:", libh.convective_heat_transfer_coefficient(300, 330, 0.7))
+context = {}
+context = {"Tair": 3}
+print(context['Tair'])
+context['Tair'] = context['Tair'] + 273
+print(context['Tair'])

@@ -11,36 +11,24 @@ from math import exp, pi, sin
 
 
 """Constants"""
-Ca = 1009 # Heat capacity air, J/kg/K (assumed constant)
 
 """Climatic data - Cambodia"""
-Sm = 463  # W/m2
-Tamb = 30 + 273  # °K (mean diurnal temperature)
-t_rise = 7  # h - Time sunrise
-t_set = 19  # h - Time sunset
-t0 = 9.5    # h - Start of drying
-td = 6.5    # h - Drying time
-tf = td + t0  #h - End of drying
-Iatm = 377  # W/m2
+
+
 
 
 
 
 """Specifications - Drying 10kg of mangoes in Cambodia"""
-R = 1.4   # m - Aspect ratio
-Q = 0.03  # kg of humid air/s - Air flow rate
-Wd = 1.4  # m - Width of the dryer
-k = 0.85  # Reduction factor
-M0 = 10   # kg - Mass of product
+
+
+
+
 #ep = 0.001 # m - Plastic thickness
 #lp = 0.2  # W/m*K - Plastic thermal conductivity
 #e = 6 / 1000  # m - Thickness of the slices of product
 
-
-Lc = 0.7  # m - Hydraulic diamater #TODO: how to fix this parameter ?
-Lsup = 1.51 # m
 #h_star = 10                        #TODO: how to fix this parameter ?
-Td = 60     # °C - mean temperature at the end of the heating section along the day #TODO: discuss
 Tmax = 90   # °C - maximal Tair allowed at the end of the heating section along the day #TODO: discuss function product
 tol = 5     # °C (or K) - tolerance on the mean temperature in the dryer
 
@@ -69,7 +57,7 @@ def direct_diffuse_solar_radiation(Sm: float, t_set: float, t_rise: float, t: fl
     return S
 
 
-def temperature_time_t(Tamb, t, LH)->list:
+def temperature_time_t(Tamb, t, Iatm, Sm, tset, trise, Lc, R, k, LH, Q, Ca, Wd)->list:
     """Gives the temperature profile in the heating section at one time t of the day.
     The first execution (assuming LH >>), all the values will be stored in the dict STORAGE with keys (z,t)
     and values [Tp, Tfl, P, Tair]
@@ -83,7 +71,7 @@ def temperature_time_t(Tamb, t, LH)->list:
         x: values of Tp, Tfl, P and Tair when z = LH at time t"""
 
     z = 0
-    data = (Tamb, t)
+    data = (Tamb, t, Iatm, Sm, tset, trise, Tamb, Lc, R, k)
     Tair = Tamb
 
     s0 = [310, 320, 350] # Initial vector
@@ -92,8 +80,8 @@ def temperature_time_t(Tamb, t, LH)->list:
     while z < LH:
         z = round(z + DELTA_Z, 2)
         P = x[2]
-        Tair = Tair_z_plus_dz(P,Tair)
-        data = (Tair, t)  # Tair = Tair_next from previous iteration
+        Tair = Tair_z_plus_dz(P, Tair, Q, Ca, Wd)
+        data = (Tair, t, Iatm, Sm, tset, trise, Tamb, Lc, R, k)  # Tair = Tair_next from previous iteration
         s0 = x            # Old solution is the new initial solution
         x = fsolve(balance_equations_heating, s0, args=data)
 
@@ -132,9 +120,9 @@ def balance_equations_heating(vars, *data):
     h_p_air = libh.convective_heat_transfer_coefficient(Tp, Tair, Lc)
     h_star = 10 #libh.convective_heat_transfer_coefficient(Tp, Tamb, Lsup)
 
-    eq1 = Iatm + direct_diffuse_solar_radiation(Sm, t_set, t_rise, t) - h_star * (Tp - Tamb) - libh.infrared_energy_flux(Tp)
+    eq1 = Iatm + direct_diffuse_solar_radiation(Sm, tset, trise, t) - h_star * (Tp - Tamb) - libh.infrared_energy_flux(Tp)
     eq2 = P - h_fl_air * (Tfl - Tair) - h_p_air * (Tp - Tair) * R
-    eq3 = direct_diffuse_solar_radiation(Sm, t_set, t_rise, t) * k - (libh.infrared_energy_flux(Tfl) - libh.infrared_energy_flux(Tp)) - h_fl_air * (Tfl - Tair)
+    eq3 = direct_diffuse_solar_radiation(Sm, tset, trise, t) * k - (libh.infrared_energy_flux(Tfl) - libh.infrared_energy_flux(Tp)) - h_fl_air * (Tfl - Tair)
 
     return [eq1, eq2, eq3]
 
@@ -152,7 +140,7 @@ def Tair_z_plus_dz(P, Tair, Q, Ca, Wd):
 
     return Tair_next
 
-def estimate_length_heating(Tair_LH: list, LH):
+def estimate_length_heating(Tair_LH: list, LH, td, Td):
     """Estimates the optimal length of the drying part with two criteria (not used simultaneously)
     Criteria 1: Temperature at the end of the heating section (z = LH)  never exceeds a certain threshold Tmax.
     Criteria 2: Mean temperature at the end of the heating section (z = LH) from t0 to tf is Td.
@@ -188,7 +176,6 @@ def estimate_length_heating(Tair_LH: list, LH):
     elif mean_temperature > Td:
         result = -1
 
-    print(result)
     return result
 
 
@@ -196,18 +183,19 @@ def start_time_drying(td, tset, trise):
     t0 = (trise + tset)/2 - td/2
     return t0
 
-def temperatures_heating_section(LH)->list:
+def temperatures_heating_section(Tamb, td, Iatm, Sm, tset, trise, Lc, R, k, LH, Q, Ca, Wd)->list:
     """Gives the temperature profile at the end of the drying section is calculated for a certain length of the
     drying section.
 
     Args:
        LH: length of the drying section  """
 
-    t = t0
+    t = start_time_drying(td, tset, trise)
+    tf = t + td
     profile_end_heating = []
 
     while t <= tf:
-        x = temperature_time_t(Tamb, t, LH)
+        x = temperature_time_t(Tamb, t, Iatm, Sm, tset, trise, Lc, R, k, LH, Q, Ca, Wd)
         profile_end_heating.append(x)
         t += DELTA_T
 
@@ -235,11 +223,36 @@ def find_next_value(test_length_heating, res, LH, intervals_z):
         next = upper + (LH - upper) / 2
 
     next_rounded = round(next,1)
-    print("Next value to try should be ", next, " but is rounded to ", next_rounded)
+    print("Next value of LH to try should be:", next, "but is rounded to:", next_rounded, "m")
     return next_rounded
 
-def compute_heating_length():
-    LH = 5
+
+def main():
+    Tamb = 30 + 273  # °K (mean diurnal temperature)
+    Iatm = 377  # W/m2
+    Sm = 463  # W/m2
+    tset = 19  # h - Time sunset
+    trise = 7  # h - Time sunrise
+    R = 1.4  # m - Aspect ratio
+    Lc = 0.7  # m - Hydraulic diamater #fixed by cross section
+    k = 0.85  # Reduction factor
+    Q = 0.03  # kg of humid air/s - Air flow rate
+    Wd = 1.4  # m - Width of the dryer
+    td = 6.5
+    Td = 70
+
+
+    solution = compute_heating_length(Tamb, Iatm, Sm, tset, trise, Lc, R, k, Q, Wd, td, Td)
+    print(solution['Tair_LH'], "\n", solution['LH'], "\n", solution['P_LH'], "\n")
+
+def compute_heating_length(Tamb, Iatm, Sm, tset, trise, Lc, R, k, Q, Wd, td, Td):
+
+    t0 = start_time_drying(td, tset, trise)
+    tf = td + t0  # h - End of drying
+    Ca = 1009  # Heat capacity air, J/kg/K (assumed constant)
+
+
+    LH = 10
     air = 3  # Tair is the 4th element of vector x
     energy = 2  # P is the 3rd element of vector x
     Tair_LH, P_LH, intervals_z, intervals = [], [], [], []
@@ -251,7 +264,7 @@ def compute_heating_length():
     global ADD_STORAGE
     ADD_STORAGE = True
 
-    profile_end_heating = temperatures_heating_section(LH)
+    profile_end_heating = temperatures_heating_section(Tamb, td, Iatm, Sm, tset, trise, Lc, R, k, LH, Q, Ca, Wd)
     ADD_STORAGE = False
 
     # Get Tair and P profile in z = LH and
@@ -264,23 +277,29 @@ def compute_heating_length():
         intervals.append(t)
         t += DELTA_T
 
-    res = estimate_length_heating(Tair_LH, LH)
+    res = estimate_length_heating(Tair_LH, LH, td, Td)
 
     test_length_heating = [0]  # Keeps track of the LH values tested
+    filtered_storage = filter_dictionnary(LH)
 
     while res != 0 and (len(test_length_heating) == len(set(test_length_heating))):
         new_LH = find_next_value(test_length_heating, res, LH, intervals_z)
-        print("Next value is: ", new_LH)
+
         test_length_heating.append(LH)
         LH = new_LH
 
         print("List of trials ", test_length_heating, " now we try ", LH)
         filtered_storage = filter_dictionnary(LH)
         Tair_LH = tools.toCelsius(tools.extract_temperature_air(filtered_storage))
-        res = estimate_length_heating(Tair_LH, LH)
+        res = estimate_length_heating(Tair_LH, LH, td, Td)
+    Tair_LH = tools.toCelsius(tools.extract_temperature_air(filtered_storage))
     P_LH = tools.extract_energy_flux(filtered_storage)
-    print(P_LH)
-    print(Tair_LH)
+
+    print("---> Heating length is: ", LH, "m")
+
+    solution = {"LH": LH, "Tair_LH": Tair_LH, "P_LH": P_LH}
+
+    return solution
 
     draw_profiles(Tair_LH, P_LH, intervals, LH)
 
