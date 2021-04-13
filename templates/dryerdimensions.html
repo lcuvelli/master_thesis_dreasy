@@ -3,14 +3,170 @@
 {{ super() }}
 {% endblock %}
 
+{% block head %}
+  {{ super() }}
+{% endblock %}
+
 {% block title %} Dimensions of the solar dryer {% endblock %}
 
 {% block page %} Calculating dimensions of the solar dryer {% endblock %}
 
 {% block content %}
-    Add explanations about the project
+  <form action="" method="get">
+    <b>Climatic data : </b>
 
-    {% if context['computing'] == true %}
+  <div class="row xl-3">
+    <label class="col-xl-4 "> Diurnal direct and diffuse solar radiation flux (S<sub>m</sub>): </label>
+    <div class="col-xl-3">
+      <input type="number" step="0.1"  name="Sm" min="0" required value="{{ context['Sm'] }}" > W/m<sup>2</sup>
+    </div>
+  </div>
+
+    <div class="row xl-3">
+    <label class="col-xl-4 "> Diurnal atmospheric infrared radiation flux (I<sub>atm</sub> ): </label>
+    <div class="col-xl-3">
+      <input type="number" step="0.1"  name="Iatm" min="0" required value="{{ context['Iatm'] }}" > W/m<sup>2</sup>
+    </div>
+  </div>
+
+  <div class="row xl-3">
+    <label class="col-xl-4">Ambient temperature (T<sub>amb</sub>):</label>
+    <div class="col-xl-3">
+      <input type="number" step="0.1" min="273.2"  max="373" name="Tamb" required value="{{ context['Tamb'] }}"> K
+    </div>
+  </div>
+
+    <div class="row xl-3">
+    <label class="col-xl-4">Ambient relative humidity (RH<sub>amb</sub>):</label>
+    <div class="col-xl-3">
+        <input input type="number" step="0.1"  name="RHamb" min="0" max="100" required value="{{ context['RHamb'] }}"> %
+    </div>
+  </div>
+
+    <div class="row xl-3">
+    <label class="col-xl-4">Time of sunrise (t<sub>rise</sub>):</label>
+    <div class="col-xl-3">
+      <input type="number" step="0.1" min="0"  max="24" name="trise" required value="{{ context['trise'] }}"> h
+    </div>
+  </div>
+
+    <div class="row xl-3">
+    <label class="col-xl-4">Time of sunset (t<sub>set</sub>):</label>
+    <div class="col-xl-3">
+      <input type="number" step="0.1" min="0"  max="24" name="tset" required value="{{ context['tset'] }}"> h
+    </div>
+  </div>
+    <p></p>
+
+    <b>Specifications : </b>
+
+    <div class="row xl-3">
+    <label class="col-xl-4">Driying time (t<sub>d</sub>):</label>
+    <div class="col-xl-3">
+        <input type="number" step="0.1" min="0" max="24" name="td" required value="{{ context['td'] }}"> h
+    </div>
+  </div>
+
+    <div class="row xl-3">
+    <label class="col-xl-4">Driying temperature (T<sub>d</sub>):</label>
+    <div class="col-xl-3">
+        <input type="number" step="0.1" min="273.2" name="Td" max="373" required value="{{ context['Td'] }}"> K
+    </div>
+  </div>
+
+    <div class="row xl-3">
+    <label class="col-xl-4">Air flow rate (Q):</label>
+    <div class="col-xl-3">
+        <input type="number" step="0.001" min="0" name="Q" required value="{{ context['Q'] }}"> kg humid air/s
+    </div>
+  </div>
+
+    <div class="row xl-3">
+    <label class="col-xl-4">Mass of product to dry (M0):</label>
+    <div class="col-xl-3">
+        <input type="number" step="0.1" min="0" name="M0" required value="{{ context['M0'] }}"> kg
+    </div>
+  </div>
+
+    <div class="row xl-3">
+    <label class="col-xl-4">Reduction factor (k):</label>
+    <div class="col-xl">
+        <input type="number" step="0.01" min="0" name="k" required value="{{ context['k'] }}"> (depends of plastic and wood structure)
+    </div>
+  </div>
+
+
+    <p></p>
+    <p></p>
+
+    <b> Design of the dryer : </b>
+    <div class="row xl-3">
+    <label class="col-xl-4">Aspect ratio (R = W<sub>p</sub> / W<sub>d</sub>):</label>
+    <div class="col-xl-3">
+      <input disabled type="number" step="0.1" min="0"  name="R" required value="{{ context['R'] }}">
+    </div>
+  </div>
+
+     <div class="row xl-3">
+       <label class="col-xl-4">Length cross section of plastic (W<sub>p</sub> = L<sub>sup</sub> + h + H):</label>
+    <div class="col-xl-3">
+      <input disabled type="number" step="0.1" min="0" name="Wp" required value="{{ context['Wp'] }}"> m
+    </div>
+  </div>
+
+    <div class="row xl-3">
+    <label class="col-xl-4">Width of the dryer (W<sub>d</sub>):</label>
+    <div class="col-xl-3">
+      <input disabled type="number" step="0.1" min="0" name="Wd" required value="{{ context['Wd'] }}"> m
+    </div>
+  </div>
+
+
+    <div class="row xl-3">
+    <label class="col-xl-4">Small height (h):</label>
+    <div class="col-xl-3">
+      <input disabled type="number" step="0.1" min="0" name="h" required value="{{ context['h'] }}"> m
+    </div>
+  </div>
+    <div class="row xl-3">
+    <label class="col-xl-4">Big height (H):</label>
+    <div class="col-xl-3">
+      <input disabled type="number" step="0.1" min="0" name="H" required value="{{ context['H'] }}"> m
+    </div>
+  </div>
+    <div class="row xl-3">
+    <label class="col-xl-4">Superior length (L<sub>sup</sub>):</label>
+    <div class="col-xl-3">
+      <input disabled type="number" step="0.1" min="0" name="Lsup" required value="{{ context['Lsup'] }}"> m
+    </div>
+  </div>
+
+    <div class="row xl-3">
+    <label class="col-xl-4">Hydraulic diameter (L<sub>c</sub> = 4S / P):</label>
+    <div class="col-xl-3">
+      <input disabled type="number" step="0.1" min="0" name="Lc" required value="{{ context['Lc'] }}"> m
+    </div>
+  </div>
+
+    <button type="submit" value="Compute" name = "Compute" class="btn btn-primary" style="margin-bottom:10px; margin-top:10px">Compute dryer heating section lenght</button>
+
+
+
+
+</form>
+
+<div class="solution">
+
+  {% if context['t0'] == null or context['t0'] == "" %}
+   <b> Please fill all attributes. Results will appear here. Computation might take a few minutes.</b>
+
+   {% else %}
+  You should start your drying at <b> {{ context['t0'] }} h </b> <br>
+  Heating length should be: <b> {{ solution['LH'] }} m </b> to achieve <b> {{ solution['Td_mean'] }} °C </b> as temperature in the heating section
+
+   {% endif %}
+
+  {% if context['status'] == running %}
 
     <div class="text-center">
         Computation might take a few minutes...
@@ -19,6 +175,52 @@
       </div>
     </div>
     {% endif %}
+
+  </div>
+
+<div class="container">
+        {% for message in get_flashed_messages() %}
+        <div class="alert alert-warning">
+            <!-- <button type="button" class="btn-close" aria-label="close" data-dismiss="alert">&times;</button>-->
+            {{ message }}
+        </div>
+        {% endfor %}
+    </div>
+
+  <div class="illustration" >
+      <img src="/static/cross_section.png" style="width:100%;max-width:400px">
+    </div>
+
+
+<style>
+  form {
+    background-color:#D3D3D3;
+    padding-left: 10px;
+  }
+
+  input {
+  width: 150px;
+
+  }
+
+  .solution{
+  padding-top: 10px;
+  padding-left: 10px;
+  }
+
+  .container{
+  padding-top: 10px;
+  padding-left: 10px;
+  }
+
+
+</style>
+
 {% endblock %}
+
+
+
+
+
 
 

@@ -5,61 +5,29 @@ from numpy import isclose, polyfit
 import matplotlib.pyplot as plt
 import tikzplotlib
 import numpy as np
+from tools import darboux_sum
 import matplotlib as mpl
 import pylab as pl
 
 
 
-from math import exp, pi, sin
+from math import exp
 import timeit
 
-
-"""Constants"""
-Ca = 1009 # Heat capacity air, J/kg/K
-
-"""Climatic data - Cambodia"""
-Sm = 463  # W/m2
-Tamb = 30 + 273  # °K (mean diurnal temperature)
-t_rise = 7  # h - Time sunrise
-t_set = 19  # h - Time sunset
-t0 = 9.5    # h - Start of drying
-td = 6.5    # h - Drying time
-tf = td + t0  #h - End of drying
-RHamb = 70  # %
-Iatm = 377  # W/m2
-
-
-
-"""Specifications - Drying 10kg of mangoes in Cambodia"""
-R = 1.4   # m - Aspect ratio
-Q = 0.03  # kg of humid air/s - Air flow rate
-Wd = 1.4  # m - Width of the dryer
-k = 0.85  # Reduction factor
-M0 = 10   # kg - Mass of product
-ep = 0.001 # m - Plastic thickness
-lp = 0.2  # W/m*K - Plastic thermal conductivity
-e = 6 / 1000  # m - Thickness of the slices of product
-
-X0 = 7    # kg water/kg dry product - Initial moisture of the products
-Xf = 0.1  # kg water/kg dry product - Final moisture of the products
-M0 = 10   # kg of product to dry
-Lw = 2358 * 1000 # J/kg - Mass latent heat of vaporization
-
-
-
+Lw = 2358 * 1000 # J/kg - Mass latent heat of vaporization #TODO: change in function of T
 DELTA_T = 0.5
 
 
 
 
-def evaporation_coefficient():
+def evaporation_coefficient(X0, Xf, td):
     """Coefficient in the function of the energy flux consumed by the evaporation"""
 
     alpha = - 4 * (X0 - Xf) / (td * 3600 * (exp(-4) - 1))
 
     return alpha
 
-def J(t, alpha):
+def J(t, alpha, t0, td):
     """Kg of water per kg dry product per second as a function of time
 
     Args:
@@ -68,7 +36,7 @@ def J(t, alpha):
 
     return alpha * exp(-4 * (t - t0)/td)
 
-def J2(t, T, alpha):
+def J2(t, T, alpha, Td, t0, td):
     """Kg of water per kg dry product per second as a function of time
 
         Args:
@@ -76,7 +44,6 @@ def J2(t, T, alpha):
             alpha: coefficient of the exponentiel """
     Ea = 30 * 1000 # J/mol
     Rg = 8.314     # J/mol*K
-    Td = 70 + 273  # K
 
     return alpha * exp(-4 * (t - t0) / td) * exp(-Ea/Rg * (1/T - 1/Td))
 
@@ -85,43 +52,46 @@ def mass_per_surface_unit(M0, LD, Wd):
     Ms = M0/(LD * Wd)
     return Ms
 
-def darboux_sum(y: list, dt)->float:
-    """Gives the Darboux sum, computed as the mean value between the lower and upper Darboux.
-
-    Args:
-        y: List of the value of the function on the interval [0, len(y)]
-        dt: length of the subinterval of the partition """
-
-    lower_sum = 0
-    upper_sum = 0
-
-    for i in range(len(y) - 1):
-        inf = min(y[i], y[i+1])
-        sup = max(y[i], y[i+1])
-
-        lower_sum += inf * dt
-        upper_sum += sup * dt
-    print("Lower Darboux sum:", lower_sum)
-    print("Upper Darboux sum:", upper_sum)
-
-    return (lower_sum + upper_sum)/2
 
 def main():
-
-    intervals_t = np.arange(t0, t0 + td + DELTA_T, DELTA_T).tolist()
-    alpha = evaporation_coefficient()
-    print(alpha)
-
-
+    X0 = 10
+    Xf = 0.9
+    td = 6.5
+    t0 = 9.75
+    tf = td + t0
+    Td = 60
     P = [53.755463930536635, 61.07720999613991, 67.01758728494032, 71.7111138804958, 75.26067224112127, 77.74304067972115, 79.21153410558242, 79.69757147809871, 79.21153410558242, 77.74304067972115, 75.2606722411213, 71.71111388049594, 67.01758728494003, 61.07720999613991]
     T = [57.05070711384582, 61.89683694590565, 66.07278090156086, 69.53688856317234, 72.25906951723152, 74.21781731805669,
      75.39864113287763, 75.79316322713913, 75.39864113287763, 74.21781731805669, 72.25906951723152, 69.53688856317234,
      66.07278090156092, 61.89683694590565]
+    Wd = 1.5 #m
+    M0 = 10 #kg
+
+    compute_drying_length(X0, Xf, M0, td, t0, Td, Wd, P, T)
+
+def compute_drying_length(X0, Xf, M0, td, t0, Td, Wd, P:list, T:list):
+    """
+
+    :param X0:
+    :param Xf:
+    :param M0:
+    :param td:
+    :param t0:
+    :param Td:
+    :param P:
+    :param T: list of temperatures (in °C) at z = LH
+    :return:
+    """
+
+    tf = t0 + td
+    intervals_t = np.arange(t0, t0 + td + DELTA_T, DELTA_T).tolist()
+    alpha = evaporation_coefficient(X0, Xf, td)
+    print(alpha)
+
     y = []
     for i in range(len(T)):
-        y.append(J2(intervals_t[i],T[i]+273, alpha))
+        y.append(J2(intervals_t[i],T[i]+273, alpha, Td+273, t0, td))
         #y.append(J(intervals_t[i], alpha))
-
 
     t = t0
     M = []
@@ -133,9 +103,9 @@ def main():
         i+=1
     print(len(M), len(y))
     print(M0 /(1+X0))
-    moyenne = darboux_sum(M,DELTA_T)/td
-    print(moyenne)
-    print(moyenne/Wd)
+    mean = darboux_sum(M,DELTA_T)/td
+    print(mean)
+    print(mean/Wd)
 
 
 

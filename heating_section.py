@@ -173,9 +173,12 @@ def estimate_length_heating(Tair_LH: list, LH, td, Td):
 
     elif mean_temperature < Td:
         result = 1
+        print("Need to bigger LH")
     elif mean_temperature > Td:
         result = -1
+        print("Need to lower LH")
 
+    print(result)
     return result
 
 
@@ -247,6 +250,7 @@ def main():
 
 def compute_heating_length(Tamb, Iatm, Sm, tset, trise, Lc, R, k, Q, Wd, td, Td):
 
+    Td = Td - 273
     t0 = start_time_drying(td, tset, trise)
     tf = td + t0  # h - End of drying
     Ca = 1009  # Heat capacity air, J/kg/K (assumed constant)
@@ -294,10 +298,12 @@ def compute_heating_length(Tamb, Iatm, Sm, tset, trise, Lc, R, k, Q, Wd, td, Td)
         res = estimate_length_heating(Tair_LH, LH, td, Td)
     Tair_LH = tools.toCelsius(tools.extract_temperature_air(filtered_storage))
     P_LH = tools.extract_energy_flux(filtered_storage)
+    mean_temperature = tools.darboux_sum(Tair_LH, DELTA_T) / td
 
     print("---> Heating length is: ", LH, "m")
 
-    solution = {"LH": LH, "Tair_LH": Tair_LH, "P_LH": P_LH}
+
+    solution = {"LH": LH, "Tair_LH": Tair_LH, "P_LH": P_LH, "Td_mean": mean_temperature}
 
     return solution
 

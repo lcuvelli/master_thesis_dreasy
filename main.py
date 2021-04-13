@@ -22,11 +22,6 @@ def home():
     return render_template('home.html')
 #TODO: nav.html logo renders strangely when changing page
 
-@app.route("/dryer_dimensions")
-def dryer_dimensions():
-    context = {"computing": True}
-    return render_template('dryerdimensions.html', context = context)
-
 
 @app.route("/contacts")
 def contacts():
@@ -37,8 +32,9 @@ def about():
     return render_template('about.html')
 
 
-@app.route("/t")
-def test():
+@app.route("/dryer_dimensions")
+def dryerdimensions():
+    status = "waiting"
 
     # Climatic data
     Sm = request.args.get("Sm", type=float)
@@ -55,6 +51,7 @@ def test():
     Td = request.args.get("Td", type=float)  # TODO: already input in airflow
     Q = request.args.get("Q", type=float)  # TODO: already input in airflow
     M0 = request.args.get("M0", type=float)  # TODO: already input in airflow
+
 
     # Dryer design
     #R = request.args.get("R", type=float)
@@ -79,6 +76,7 @@ def test():
     R =  round(Wp / Wd,3)
     Lc = round(heatsectionlib.hydaulic_diameter(H,h,Wd), 3)
 
+    solution = {}
 
     i = 0
     if request.method == 'GET':
@@ -97,14 +95,16 @@ def test():
                 flash(message)
 
             if i == 0 :
+                status = "running"
                 t0 = heatsectionlib.start_time_drying(td, tset, trise)
                 solution = heatsectionlib.compute_heating_length(Tamb, Iatm, Sm, tset, trise, Lc, R, k, Q, Wd, td, Td)
+                status = "waiting"
 
     context = {"RHamb": RHamb, "Tamb": Tamb, "Sm": Sm, "trise": trise, "tset": tset,
                "R": R, "td": td, "t0": t0, "Iatm": Iatm, "Q": Q, "Td": Td, "M0": M0,
-               "Wd": Wd, "h": h, "H": H, "Lsup": Lsup, "Wp": Wp, "Lc": Lc, "k": k}
+               "Wd": Wd, "h": h, "H": H, "Lsup": Lsup, "Wp": Wp, "Lc": Lc, "k": k, "status": status}
 
-    return render_template("test.html", context=context)
+    return render_template("dryerdimensions.html", context=context, solution=solution)
 
 @app.route("/airflow")
 def airflow():
