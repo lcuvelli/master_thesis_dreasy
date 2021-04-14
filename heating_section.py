@@ -258,7 +258,7 @@ def compute_heating_length(Tamb, Iatm, Sm, tset, trise, Lc, R, k, Q, Wd, td, Td)
     Ca = 1009  # Heat capacity air, J/kg/K (assumed constant)
 
 
-    LH = 5
+    LH = 10
     air = 3  # Tair is the 4th element of vector x
     energy = 2  # P is the 3rd element of vector x
     Tair_LH, P_LH, intervals_z, intervals = [], [], [], []
