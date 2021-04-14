@@ -2,9 +2,10 @@ from flask import Flask, render_template
 from flask import request, flash, Markup
 from flask_socketio import SocketIO, emit
 
-import time
+from time import process_time
 import air_flow_rate as airflowlib
 import heating_section as heatsectionlib
+import drying_section as dryingsectionlib
 
 
 app = Flask(__name__)
@@ -51,6 +52,8 @@ def dryerdimensions():
     Td = request.args.get("Td", type=float)  # TODO: already input in airflow
     Q = request.args.get("Q", type=float)  # TODO: already input in airflow
     M0 = request.args.get("M0", type=float)  # TODO: already input in airflow
+    X0 = request.args.get("X0", type=float)
+    Xf = request.args.get("Xf", type=float)
 
 
     # Dryer design
@@ -96,13 +99,32 @@ def dryerdimensions():
 
             if i == 0 :
                 status = "running"
+                t1_start = process_time()
                 t0 = heatsectionlib.start_time_drying(td, tset, trise)
+
+
+                print(X0, Xf, td)
                 solution = heatsectionlib.compute_heating_length(Tamb, Iatm, Sm, tset, trise, Lc, R, k, Q, Wd, td, Td)
+                print("Tair:", solution['Tair_LH'])
+                print("P:", solution['P_LH'])
+
+
+                t1_stop = process_time()
+
+                print("Elapsed time during the whole program in seconds:",
+                      t1_stop - t1_start)
+                drying_length = dryingsectionlib.compute_drying_length(X0, Xf, M0, td, t0, Td-273, Wd, solution['P_LH'], solution['Tair_LH'] )
+
+
+                solution['LD'] = drying_length['LD']
+                solution['omega_mean'] = drying_length['omega_mean']
+                print("LD:", solution['LD'])
+                print("omega_mean:", solution['omega_mean'])
                 status = "waiting"
 
     context = {"RHamb": RHamb, "Tamb": Tamb, "Sm": Sm, "trise": trise, "tset": tset,
                "R": R, "td": td, "t0": t0, "Iatm": Iatm, "Q": Q, "Td": Td, "M0": M0,
-               "Wd": Wd, "h": h, "H": H, "Lsup": Lsup, "Wp": Wp, "Lc": Lc, "k": k, "status": status}
+               "Wd": Wd, "h": h, "H": H, "Lsup": Lsup, "Wp": Wp, "Lc": Lc, "k": k, "status": status, "Xf": Xf, "X0": X0}
 
     return render_template("dryerdimensions.html", context=context, solution=solution)
 

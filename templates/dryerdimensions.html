@@ -89,6 +89,21 @@
   </div>
 
     <div class="row xl-3">
+    <label class="col-xl-4">Initial moisture of products (X<sub>0</sub>): </label>
+    <div class="col-xl">
+      <input type="number" min="0" step="0.1" name="X0" required value="{{ context['X0'] }}"> kg water/kg dry product
+    </div>
+  </div>
+
+    <div class="row xl-3">
+    <label class="col-xl-4">Final moisture of products (X<sub>f</sub>):</label>
+    <div class="col-xl">
+      <input type="number" min="0" step="0.1" name="Xf" required value="{{ context['Xf'] }}"> kg water/kg dry product
+    </div>
+  </div>
+
+
+    <div class="row xl-3">
     <label class="col-xl-4">Reduction factor (k):</label>
     <div class="col-xl">
         <input type="number" step="0.01" min="0" name="k" required value="{{ context['k'] }}"> (depends of plastic and wood structure)
@@ -102,7 +117,7 @@
     <b> Design of the dryer : </b>
     <div class="row xl-3">
     <label class="col-xl-4">Aspect ratio (R = W<sub>p</sub> / W<sub>d</sub>):</label>
-    <div class="col-xl-3">
+    <div class="col-xl">
       <input disabled type="number" step="0.1" min="0"  name="R" required value="{{ context['R'] }}">
     </div>
   </div>
@@ -162,7 +177,10 @@
 
    {% else %}
   You should start your drying at <b> {{ context['t0'] }} h </b> <br>
-  Heating length should be: <b> {{ solution['LH'] }} m </b> to achieve <b> {{ solution['Td_mean'] }} °C </b> as temperature in the heating section
+  Heating length should be: <b> {{ solution['LH'] }} m </b> to achieve <b> {{ solution['Td_mean'] }} °C </b> as temperature in the heating section <br>
+  {{ solution['TTair_LH'] }} <br>
+  {{ solution['P'] }} <br>
+  Drying length should be: <b> {{ solution['LD'] }} m </b>. Omega mean is {{ solution['omega_mean'] }} m<sub>2</sub>
 
    {% endif %}
 

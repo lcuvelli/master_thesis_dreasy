@@ -85,7 +85,9 @@ def temperature_time_t(Tamb, t, Iatm, Sm, tset, trise, Lc, R, k, LH, Q, Ca, Wd)-
         s0 = x            # Old solution is the new initial solution
         x = fsolve(balance_equations_heating, s0, args=data)
 
-        print("En (z,t) = (", z, ",", t, "): ", "(Tp, Tfl, P) = (",x[0]-273, "°C,", x[1]-273, "°C,", P, "W/m2) \n")
+
+    # TODO: remettre print
+        #print("En (z,t) = (", z, ",", t, "): ", "(Tp, Tfl, P) = (",x[0]-273, "°C,", x[1]-273, "°C,", P, "W/m2) \n")
         #print(isclose(balance_equations_Tp(x, Tair, t), [0.0, 0.0, 0.0]))  # Check if numerical solution makes sense
 
         # Dictionnary filled only once
@@ -256,7 +258,7 @@ def compute_heating_length(Tamb, Iatm, Sm, tset, trise, Lc, R, k, Q, Wd, td, Td)
     Ca = 1009  # Heat capacity air, J/kg/K (assumed constant)
 
 
-    LH = 10
+    LH = 5
     air = 3  # Tair is the 4th element of vector x
     energy = 2  # P is the 3rd element of vector x
     Tair_LH, P_LH, intervals_z, intervals = [], [], [], []
@@ -307,7 +309,7 @@ def compute_heating_length(Tamb, Iatm, Sm, tset, trise, Lc, R, k, Q, Wd, td, Td)
 
     return solution
 
-    draw_profiles(Tair_LH, P_LH, intervals, LH)
+    #draw_profiles(Tair_LH, P_LH, intervals, LH)
 
 
 

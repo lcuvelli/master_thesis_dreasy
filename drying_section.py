@@ -54,16 +54,13 @@ def mass_per_surface_unit(M0, LD, Wd):
 
 
 def main():
-    X0 = 10
-    Xf = 0.9
+    X0 = 7
+    Xf = 0.1
     td = 6.5
     t0 = 9.75
-    tf = td + t0
     Td = 60
-    P = [53.755463930536635, 61.07720999613991, 67.01758728494032, 71.7111138804958, 75.26067224112127, 77.74304067972115, 79.21153410558242, 79.69757147809871, 79.21153410558242, 77.74304067972115, 75.2606722411213, 71.71111388049594, 67.01758728494003, 61.07720999613991]
-    T = [57.05070711384582, 61.89683694590565, 66.07278090156086, 69.53688856317234, 72.25906951723152, 74.21781731805669,
-     75.39864113287763, 75.79316322713913, 75.39864113287763, 74.21781731805669, 72.25906951723152, 69.53688856317234,
-     66.07278090156092, 61.89683694590565]
+    P = [103.41795242855638, 118.20109639903882, 130.5727354591062, 140.49568166041038, 147.94938753590725, 152.9228829562677, 155.41072879588936, 155.41072879588936, 152.9228829562677, 147.94938753590733, 140.49568166041038, 130.5727354591062, 118.20109639903882, 103.41795242855643]
+    T = [49.04896603568676, 52.15320421477281, 54.80630083601244, 56.970206685130734, 58.616526550720494, 59.72496007067514, 60.28239569511095, 60.28239569511095, 59.72496007067514, 58.616526550720494, 56.970206685130734, 54.80630083601244, 52.15320421477281, 49.04896603568676]
     Wd = 1.5 #m
     M0 = 10 #kg
 
@@ -71,7 +68,6 @@ def main():
 
 def compute_drying_length(X0, Xf, M0, td, t0, Td, Wd, P:list, T:list):
     """
-
     :param X0:
     :param Xf:
     :param M0:
@@ -101,41 +97,52 @@ def compute_drying_length(X0, Xf, M0, td, t0, Td, Wd, P:list, T:list):
         M[i] = M[i]/Wd
         t+= DELTA_T
         i+=1
-    print(len(M), len(y))
-    print(M0 /(1+X0))
-    mean = darboux_sum(M,DELTA_T)/td
-    print(mean)
-    print(mean/Wd)
+
+    mean = round(darboux_sum(M,DELTA_T)/td,3)
+    print("Moyenne pour la zone de séchage:", mean, "m^2")
+    LD = round(mean/Wd,3)
+    print("Longueur de la zone de séchage:", LD)
+    solution = {"LD": LD, "omega_mean": mean}
+
+    return solution
 
 
 
-
-    plt.figure(1)
-    plt.title("Surface au sol de la zone de séchage (m2)")
-    plt.plot(intervals_t, M, 'yo')
-    plt.xlabel('Time of the day (h)')
-    plt.ylabel("Omega (m2)")
-    plt.text(13,20,"Mean: 8.4 m2")
-
-
-    """Drawing"""
-    plt.figure(2)
-    plt.title("Energy flux transferred to the air inside the dryer, W/m2 (LH = 5m)")
-    plt.plot(intervals_t,P)
-    plt.xlabel('Time of the day (h)')
-    plt.ylabel("P (W/m2)")
-
-    plt.figure(3)
-    plt.title("J(t) with alpha = 0.0012 ")
-    plt.plot(intervals_t, y, 'og')
-    plt.xlabel('Time of the day (h)')
-    plt.ylabel("J (kg of water/kg dry product per second)")
+    #
+    #
+    #
+    # f = plt.figure(1)
+    # ax = f.add_subplot(111)
+    #
+    # plt.title("Surface au sol de la zone de séchage (m2)")
+    # plt.plot(intervals_t, M, 'yo')
+    # plt.xlabel('Time of the day (h)')
+    # plt.ylabel("Omega (m2)")
+    # plt.text(0.5, 0.5, "Mean: %1.3f m2" % mean, horizontalalignment='center',
+    #          verticalalignment='center', transform=ax.transAxes)
+    #
+    # plt.text(0.5, 0.4, "LD: %1.3f m" % LD, horizontalalignment='center',
+    #          verticalalignment='center', transform=ax.transAxes)
+    #
+    #
+    # """Drawing"""
+    # plt.figure(2)
+    # plt.title("Energy flux transferred to the air inside the dryer, W/m2 (LH = 5m)")
+    # plt.plot(intervals_t,P)
+    # plt.xlabel('Time of the day (h)')
+    # plt.ylabel("P (W/m2)")
+    #
+    # plt.figure(3)
+    # plt.title("J(t) with alpha = %1.5f" % alpha)
+    # plt.plot(intervals_t, y, 'og')
+    # plt.xlabel('Time of the day (h)')
+    # plt.ylabel("J (kg of water/kg dry product per second)")
 
     #for i, txt in enumerate(T):
         #txt = str(round(txt,1))+"°C"
         #plt.annotate(txt, (intervals_t[i]+0.1, y[i]), fontsize=9)
 
-    plt.show()
+    #plt.show()
 
     # line, = plt.plot(intervals_t, y, label='for evaporation')
     # plt.legend()
