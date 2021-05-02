@@ -14,27 +14,102 @@
 {% block content %}
 
 <form action="" method="get">
-        <ul>
-        <li> Ambient relative humidity (RHamb): <input type="number" step="0.1"  name="RHamb" min="0" max="100" required value="{{ context['RHamb'] }}"> % </li>
-        <li> Ambient temperature (Tamb): <input type="number" step="0.1" min="-10"  max="120" name="Tamb" required value="{{ context['Tamb_C'] }}"> °C </li>
-        <li> Mass of product to dry (M0): <input type="number" step="0.1" min="0" name="M0" required value="{{ context['M0'] }}"> kg</li>
-        <li> Initial moisture of products (X0): <input type="number" min="0" step="0.1" name="X0" required value="{{ context['X0'] }}"> kg water/kg dry product </li>
-        <li> Final moisture of products (Xf): <input type="number" min="0" step="0.1" name="Xf" required value="{{ context['Xf'] }}"> kg water/kg dry product </li>
-        <li> Driying time (td): <input type="number" step="0.1" min="0" max="24" name="td" required value="{{ context['td'] }}"> h </li>
-        <li> Driying temperature (Td): <input type="number" step="0.1" min="0" name="Td" max="150" required value="{{ context['Td_C'] }}"> °C </li>
+    <b>Climatic data : </b>
+
+  <div class="row xl-3">
+    <label class="col-xl-4 "> Ambient relative humidity: (RH<sub>amb</sub>): </label>
+    <div class="col-xl">
+      <input type="number" step="0.1"  name="RHamb" min="0" max="100" required value="{{ context['RHamb'] }}"> %
+    </div>
+  </div>
+    <div class="row xl-3">
+    <label class="col-xl-4 "> Ambient temperature: (T<sub>amb</sub>): </label>
+    <div class="col-xl">
+        <input type="number" step="0.1" min="-10"  max="120" name="Tamb" required value="{{ context['Tamb_C'] }}"> °C    </div>
+  </div>
+
+    <p></p>
+
+    <b>Specifications : </b>
+
+    <div class="row xl-3">
+    <label class="col-xl-4 "> Mass of product to dry: (M<sub>0</sub>): </label>
+    <div class="col-xl">
+        <input type="number" step="0.1" min="0" name="M0" required value="{{ context['M0'] }}"> kg   </div>
+  </div>
+
+    <div class="row xl-3">
+    <label class="col-xl-4 "> Initial moisture of products: (X<sub>0</sub>): </label>
+    <div class="col-xl">
+        <input type="number" min="0" step="0.1" name="X0" required value="{{ context['X0'] }}"> kg water/kg dry product   </div>
+  </div>
+
+    <div class="row xl-3">
+    <label class="col-xl-4 "> Final moisture of products: (X<sub>f</sub>): </label>
+    <div class="col-xl">
+        <input type="number" min="0" step="0.1" name="Xf" required value="{{ context['Xf'] }}"> kg water/kg dry product   </div>
+  </div>
+
+    <div class="row xl-3">
+    <label class="col-xl-4 "> Drying time: (t<sub>d</sub>): </label>
+    <div class="col-xl">
+        <input type="number" step="0.1" min="0" max="24" name="td" required value="{{ context['td'] }}"> h   </div>
+  </div>
+
+     <div class="row xl-3">
+    <label class="col-xl-4 "> Drying temperature: (T<sub>d</sub>): </label>
+    <div class="col-xl">
+        <input type="number" step="0.1" min="0" name="Td" max="150" required value="{{ context['Td_C'] }}"> °C   </div>
+  </div>
+
+    <input type="submit" class="btn btn-primary" value="Compute" name = "Compute">
 
 
-        <li> <input type="submit" class="btn btn-primary" value="Compute" name = "Compute"> </li>
-        </ul>
-    </form>
+</form>
 
+    <div class="solution">
    {% if Q == null or Q == "" %}
    <b> Please fill all attributes.</b>
 
    {% elif Q > 0 %}
-   Water mass to evaporate is {{mass_to_evaporate}} kg. <br>
-   Your air flow rate should be : <b> {{Q}} kg humid air/s </b>
-   {% endif %}
+   Mass of water to evaporate is {{mass_to_evaporate}} kg. <br>
+   Your air flow rate should be : <b> {{Q}} m<sup>3</sup>/h </b>
+
+        <p>To achieve this air flow, we strongly advice you to use <u>multiple</u> fans. <br>
+        &#9888 &nbsp; A large fan in the middle of the entrance does not provide uniform ventilation. </p>
+
+    <p></p>
+
+        <i>RS Components</i> sells axial fans <a href="https://befr.rs-online.com/web/c/hvac-fans-thermal-management/air-conditioning-fans/axial-fans/" target="_blank"> here </a>
+        <p></p>
+
+
+        <div class="row">
+
+          <div class="col-sm">
+                  <div class="left">
+                      <a href="https://befr.rs-online.com/web/p/axial-fans/1118322/" target="_blank"> This </a> fan has an airflow of 20 m<sup>3</sup>/h and costs € 8.78 <br>
+                      {% set nb_fans = Q/20 %}
+                      {% set nb_fans = nb_fans|round(0)|int %}
+                      {% set price = nb_fans * 8.78 %}
+                      Using this fan, you would need {{ nb_fans  }} fans for a total cost of € {{ price|round(2) }}
+                  </div>
+          </div>
+        <div class="col-sm">
+              <div class="center">
+                  <figure>
+                      <img src="./static/DC_fan.jpg" alt="Avatar woman" border="1px">
+                      <figcaption>DC Axial Fan, Sunon, 12 V dc from RS Components</figcaption>
+                  </figure>
+
+                </div>
+          </div>
+        </div>
+        <p></p>
+
+
+    {% endif %}
+    </div>
 
 
 
@@ -48,10 +123,38 @@
     </div>
 
 
+
+
+
 <style>
 .btn-primary {
      background-color: rgb(19,74,145);
      }
+form {
+    background-color:#D3D3D3;
+    padding-left: 10px;
+  }
+
+.center {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  width: 80%;
+}
+
+input {
+  width: 150px;
+
+  }
+
+.solution{
+  padding-top: 10px;
+  padding-left: 20px;
+  }
+
+img {
+    width: 50%;
+}
 </style>
 {% endblock %}
 

@@ -88,7 +88,7 @@ def air_flow_rate(Qmin: float, F:float) -> float:
 
 def compute_air_flow_rate(RHamb: float, Tamb: float, M0: float, X0: float, Xf: float, td: float, Td: float)->float:
 
-    F = 12
+    F = 10
     RHamb = RHamb / 100
     Yamb = mean_ambient_air_humidity(RHamb, Tamb)
     print("Données : \n",

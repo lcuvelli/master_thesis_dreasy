@@ -6,6 +6,10 @@ from time import process_time
 import air_flow_rate as airflowlib
 import heating_section as heatsectionlib
 import drying_section as dryingsectionlib
+import fluids.atmosphere as fl
+P_ATM = 101325                          # atm pressure  (Pa)
+
+
 
 
 app = Flask(__name__)
@@ -146,7 +150,6 @@ def airflow():
             Tamb = Tamb_C + 273  # Conversion Celsius to Kelvin
             Td = Td_C + 273
             i = 0
-            print("YES")
 
             if Xf >= X0:
                 message = Markup(
@@ -162,7 +165,11 @@ def airflow():
 
             elif (i == 0):
                 mass_to_evaporate = M0 / (1 + X0) * (X0 - Xf)
-                Q = round(airflowlib.compute_air_flow_rate(RHamb, Tamb, M0, X0, Xf, td, Td), 4)
+                mass_to_evaporate = round(mass_to_evaporate,1)
+                density = fl.ATMOSPHERE_1976.density(Td, P_ATM) # densité de l'air
+                Q = airflowlib.compute_air_flow_rate(RHamb, Tamb, M0, X0, Xf, td, Td)
+                Q = round(Q * 3600 / density,1)   # in m^3/h
+
                 if Q < 0:
                     message = Markup(
                         'Error: Minimal air flow is negative. Not feasible with conditions given. Please try again.')
