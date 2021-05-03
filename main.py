@@ -20,8 +20,6 @@ def test_main():
 @app.route("/")
 def home():
     return render_template('home.html')
-#TODO: nav.html logo renders strangely when changing page
-
 
 @app.route("/contacts")
 def contacts():
@@ -38,9 +36,8 @@ def dryerdimensions():
 
     # Climatic data
     Sm = request.args.get("Sm", type=float)
-    RHamb = request.args.get("RHamb", type=float) #TODO: already input in airflow
-    print("RGamb:", RHamb)
-    Tamb_C = request.args.get("Tamb_C", type=float) #TODO: already input in airflow
+    RHamb = request.args.get("RHamb", type=float)
+    Tamb_C = request.args.get("Tamb_C", type=float)
     trise = request.args.get("trise", type=float)
     tset = request.args.get("tset", type=float)
     Iatm = request.args.get("Iatm", type=float)
@@ -61,6 +58,7 @@ def dryerdimensions():
     #if not R :
     #    R = 1.5
     Wd = request.args.get("Wd", type=float)
+    print("Wd")
     if not Wd:
         Wd = 1.5
     H = request.args.get("H", type=float)
@@ -79,17 +77,19 @@ def dryerdimensions():
     R =  round(Wp / Wd,3)
     Lc = round(heatsectionlib.hydaulic_diameter(H,h,Wd), 3)
 
+    context = {"RHamb": RHamb, "Tamb_C": Tamb_C, "Sm": Sm, "trise": trise, "tset": tset,
+               "R": R, "td": td, "t0": t0, "Iatm": Iatm, "Q": Q, "Td_C": Td_C, "M0": M0,
+               "Wd": Wd, "h": h, "H": H, "Lsup": Lsup, "Wp": Wp, "Lc": Lc, "k": k, "status": status, "Xf": Xf, "X0": X0}
+
     solution = {}
 
     i = 0
     if request.method == 'GET':
         if request.args.get('Compute') == 'Compute':
-            print(RHamb, Tamb_C, X0)
             Tamb = Tamb_C + 273.15
             Td = Td_C + 273.15
             density = fl.ATMOSPHERE_1976.density(Td, P_ATM)  # densité de l'air
             Q_kg_s = Q/3600 * density
-            print(Q_kg_s)
 
             if tset <= trise:
                 message = Markup(
@@ -156,13 +156,13 @@ def airflow():
 
             if Xf >= X0:
                 message = Markup(
-                    'Warning: Final moisture content of the product (Xf) should be <b>lower</b> than inital moisture (X0).')
+                    'Warning: Final moisture content of the product (X<sub>f</sub>) should be <b>lower</b> than inital moisture (X<sub>0</sub>).')
                 i += 1
                 flash(message)
 
             if Tamb >= Td:
                 message = Markup(
-                    'Warning: Ambient temperature (Tamb) should be <b>lower</b> than drying temperature (Td).')
+                    'Warning: Ambient temperature (T<sub>amb</sub>) should be <b>lower</b> than drying temperature (T<sub>d</sub>).')
                 flash(message)
                 i += 1
 

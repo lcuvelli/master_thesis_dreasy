@@ -12,6 +12,7 @@
 {% block page %} Step 1: Calculating minimal airflow for dryer {% endblock %}
 
 {% block content %}
+<h3 style="text-align: center"> Once the minimal airflow for the dryer has been calculated, go to step 2 </h3>
 
 <form action="" method="get">
     <b>Climatic data : </b>
@@ -73,9 +74,13 @@
         <b> Please fill all attributes.</b>
 
    {% elif Q > 0 %}
-   Mass of water to evaporate is {{mass_to_evaporate}} kg. <br>
-   Your air flow rate should be : <b> {{Q}} m<sup>3</sup>/h </b>
+        <p class="success">
+        Mass of water to evaporate is {{mass_to_evaporate}} kg. <br>
+   Your air flow rate should be : <b> {{Q}} m<sup>3</sup>/h </b> <br></p>
 
+
+        <a href="{{ url_for('dryerdimensions', X0 = context['X0'], RHamb=context['RHamb'], Tamb_C = context['Tamb_C'], M0=context['M0'],
+        Xf = context['Xf'], td = context['td'], Td_C = context['Td_C'], Q = context['Q']) }}" class="btn btn-primary">Go to step 2</a>
         <p>To achieve this air flow, we strongly advice you to use <u>multiple</u> fans. <br>
         &#9888 &nbsp; A large fan in the middle of the entrance does not provide uniform ventilation. </p>
 
@@ -89,7 +94,7 @@
             <div class="col-sm">
               <div class="center">
                   <figure>
-                      <img src="./static/DC_fan.png" alt="Avatar woman" border="1px">
+                      <img src="./static/DC_fan.png" alt="Avatar woman" border="1px" style="width: 50%;">
                       <figcaption>DC Axial Fan, Sunon, 12 V dc from RS Components</figcaption>
                   </figure>
 
@@ -109,8 +114,6 @@
         </div>
         <p></p>
 
-        <a href="{{ url_for('dryerdimensions', X0 = context['X0'], RHamb=context['RHamb'], Tamb_C = context['Tamb_C'], M0=context['M0'],
-        Xf = context['Xf'], td = context['td'], Td_C = context['Td_C'], Q = context['Q']) }}" class="btn btn-primary">Go to step 2</a>
 
 
     {% endif %}
@@ -157,9 +160,11 @@ input {
   padding-left: 20px;
   }
 
-img {
-    width: 50%;
+.success{
+ background-color:rgb(207,255,214) ;
+ padding-left: 20px;
 }
+
 </style>
 {% endblock %}
 
