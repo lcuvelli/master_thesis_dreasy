@@ -10,11 +10,37 @@
 
 {% block content %}
 <h4 style="text-align:center">
-    Welcome to <b>Dreasy</b>, fast and easy tool to design your solar dryer!
+    Welcome to <b>Dreasy</b>, fast and easy tool to design your solar dryer
 </h4>
 
+<div class="text-center">
+  <img src="./static/dryer.png" class="rounded mx-auto d-block" alt="Design of the dryer">
+
+    <div class="caption">
+    (1) Fans
+    (2) Photovoltaic solar panel
+    (3) Heating section
+    (4) Drying section
+
+    </div>
+
+    <br>
+    <div class="container">
+    The air enters the dryer through fans, supplied by a photovoltaic solar panel.
+    The air is heated up to the drying temperature in the heating section. The heated air enters the drying part and dries the product.
+    <b>Dreasy</b> helps you to calculate the airflow needed as well as the length of the heating and drying sections.
+
+    </div>
+    </div>
 
 
 
-This tool helps you design dryers
+
+<style>
+    .rounded {
+  width: 35%;
+  height: auto;
+}
+</style>
 {% endblock %}
+
