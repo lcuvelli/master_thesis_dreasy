@@ -9,7 +9,7 @@
 
 {% block title %} Dimensions of the solar dryer {% endblock %}
 
-{% block page %} Calculating dimensions of the solar dryer {% endblock %}
+{% block page %} Step 2: Calculating dimensions of the solar dryer {% endblock %}
 
 {% block content %}
   <form action="" method="get">
@@ -32,14 +32,14 @@
   <div class="row xl-3">
     <label class="col-xl-4">Ambient temperature (T<sub>amb</sub>):</label>
     <div class="col-xl-3">
-      <input type="number" step="0.1" min="273.2"  max="373" name="Tamb" required value="{{ context['Tamb'] }}"> K
+      <input disabled type="number" step="0.1" min="-10"  max="120" name="Tamb_C" required value="{{ context['Tamb_C'] }}"> °C
     </div>
   </div>
 
     <div class="row xl-3">
     <label class="col-xl-4">Ambient relative humidity (RH<sub>amb</sub>):</label>
     <div class="col-xl-3">
-        <input input type="number" step="0.1"  name="RHamb" min="0" max="100" required value="{{ context['RHamb'] }}"> %
+        <input disabled input type="number" step="0.1"  name="RHamb" min="0" max="100" required value="{{ context['RHamb'] }}"> %
     </div>
   </div>
 
@@ -63,42 +63,42 @@
     <div class="row xl-3">
     <label class="col-xl-4">Drying time (t<sub>d</sub>):</label>
     <div class="col-xl-3">
-        <input type="number" step="0.1" min="0" max="24" name="td" required value="{{ context['td'] }}"> h
+        <input disabled type="number" step="0.1" min="0" max="24" name="td" required value="{{ context['td'] }}"> h
     </div>
   </div>
 
     <div class="row xl-3">
     <label class="col-xl-4">Drying temperature (T<sub>d</sub>):</label>
     <div class="col-xl-3">
-        <input type="number" step="0.1" min="273.2" name="Td" max="373" required value="{{ context['Td'] }}"> K
+        <input disabled type="number" step="0.1" min="-10" name="Td_C" max="120" required value="{{ context['Td_C'] }}"> °C
     </div>
   </div>
 
     <div class="row xl-3">
     <label class="col-xl-4">Air flow rate (Q):</label>
     <div class="col-xl-3">
-        <input type="number" step="0.001" min="0" name="Q" required value="{{ context['Q'] }}"> kg humid air/s
+        <input disabled type="number" step="0.001" min="0" name="Q" required value="{{ context['Q'] }}"> m<sup>3</sup>/h
     </div>
   </div>
 
     <div class="row xl-3">
     <label class="col-xl-4">Mass of product to dry (M0):</label>
     <div class="col-xl-3">
-        <input type="number" step="0.1" min="0" name="M0" required value="{{ context['M0'] }}"> kg
+        <input disabled type="number" step="0.1" min="0" name="M0" required value="{{ context['M0'] }}"> kg
     </div>
   </div>
 
     <div class="row xl-3">
     <label class="col-xl-4">Initial moisture of products (X<sub>0</sub>): </label>
     <div class="col-xl">
-      <input type="number" min="0" step="0.1" name="X0" required value="{{ context['X0'] }}"> kg water/kg dry product
+      <input disabled type="number" min="0" step="0.1" name="X0" required value="{{ context['X0'] }}"> kg water/kg dry product
     </div>
   </div>
 
     <div class="row xl-3">
     <label class="col-xl-4">Final moisture of products (X<sub>f</sub>):</label>
     <div class="col-xl">
-      <input type="number" min="0" step="0.1" name="Xf" required value="{{ context['Xf'] }}"> kg water/kg dry product
+      <input disabled type="number" min="0" step="0.1" name="Xf" required value="{{ context['Xf'] }}"> kg water/kg dry product
     </div>
   </div>
 

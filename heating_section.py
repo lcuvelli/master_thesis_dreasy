@@ -87,7 +87,7 @@ def temperature_time_t(Tamb, t, Iatm, Sm, tset, trise, Lc, R, k, LH, Q, Ca, Wd)-
 
 
     # TODO: remettre print
-        #print("En (z,t) = (", z, ",", t, "): ", "(Tp, Tfl, P) = (",x[0]-273, "°C,", x[1]-273, "°C,", P, "W/m2) \n")
+        print("En (z,t) = (", z, ",", t, "): ", "(Tp, Tfl, P) = (",x[0]-273, "°C,", x[1]-273, "°C,", P, "W/m2) \n")
         #print(isclose(balance_equations_Tp(x, Tair, t), [0.0, 0.0, 0.0]))  # Check if numerical solution makes sense
 
         # Dictionnary filled only once
@@ -252,6 +252,18 @@ def main():
 
 def compute_heating_length(Tamb, Iatm, Sm, tset, trise, Lc, R, k, Q, Wd, td, Td):
 
+    print("Tamb:", Tamb)
+    print("Iatm:", Iatm)
+    print("Sm:", Sm)
+    print("tset:", tset)
+    print("trise:", trise)
+    print("Lc", Lc)
+    print("R:", R)
+    print('k:', k)
+    print('Q:', Q)
+    print("Wd:", Wd)
+    print("td:", td)
+    print("Td:", Td)
     Td = Td - 273
     t0 = start_time_drying(td, tset, trise)
     tf = td + t0  # h - End of drying

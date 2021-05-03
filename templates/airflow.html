@@ -9,7 +9,7 @@
 
 {% block title %} Minimal Air flow Rate {% endblock %}
 
-{% block page %} Calculating minimal airflow for dryer {% endblock %}
+{% block page %} Step 1: Calculating minimal airflow for dryer {% endblock %}
 
 {% block content %}
 
@@ -25,7 +25,7 @@
     <div class="row xl-3">
     <label class="col-xl-4 "> Ambient temperature: (T<sub>amb</sub>): </label>
     <div class="col-xl">
-        <input type="number" step="0.1" min="-10"  max="120" name="Tamb" required value="{{ context['Tamb_C'] }}"> °C    </div>
+        <input type="number" step="0.1" min="-10"  max="120" name="Tamb_C" required value="{{ context['Tamb_C'] }}"> °C    </div>
   </div>
 
     <p></p>
@@ -59,7 +59,7 @@
      <div class="row xl-3">
     <label class="col-xl-4 "> Drying temperature: (T<sub>d</sub>): </label>
     <div class="col-xl">
-        <input type="number" step="0.1" min="0" name="Td" max="150" required value="{{ context['Td_C'] }}"> °C   </div>
+        <input type="number" step="0.1" min="0" name="Td_C" max="150" required value="{{ context['Td_C'] }}"> °C   </div>
   </div>
 
     <input type="submit" class="btn btn-primary" value="Compute" name = "Compute">
@@ -68,8 +68,9 @@
 </form>
 
     <div class="solution">
-   {% if Q == null or Q == "" %}
-   <b> Please fill all attributes.</b>
+        {% set Q = context['Q'] %}
+        {% if Q == null or Q == "" %}
+        <b> Please fill all attributes.</b>
 
    {% elif Q > 0 %}
    Mass of water to evaporate is {{mass_to_evaporate}} kg. <br>
@@ -85,6 +86,15 @@
 
 
         <div class="row">
+            <div class="col-sm">
+              <div class="center">
+                  <figure>
+                      <img src="./static/DC_fan.png" alt="Avatar woman" border="1px">
+                      <figcaption>DC Axial Fan, Sunon, 12 V dc from RS Components</figcaption>
+                  </figure>
+
+                </div>
+          </div>
 
           <div class="col-sm">
                   <div class="left">
@@ -95,17 +105,12 @@
                       Using this fan, you would need {{ nb_fans  }} fans for a total cost of € {{ price|round(2) }}
                   </div>
           </div>
-        <div class="col-sm">
-              <div class="center">
-                  <figure>
-                      <img src="./static/DC_fan.jpg" alt="Avatar woman" border="1px">
-                      <figcaption>DC Axial Fan, Sunon, 12 V dc from RS Components</figcaption>
-                  </figure>
 
-                </div>
-          </div>
         </div>
         <p></p>
+
+        <a href="{{ url_for('dryerdimensions', X0 = context['X0'], RHamb=context['RHamb'], Tamb_C = context['Tamb_C'], M0=context['M0'],
+        Xf = context['Xf'], td = context['td'], Td_C = context['Td_C'], Q = context['Q']) }}" class="btn btn-primary">Go to step 2</a>
 
 
     {% endif %}
