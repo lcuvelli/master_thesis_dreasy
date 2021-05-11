@@ -1,0 +1,142 @@
+{% extends "nav.html" %}
+{% block navbar %}
+{{ super() }}
+{% endblock %}
+
+{% block head %}
+  {{ super() }}
+{% endblock %}
+
+{% block title %} Database {% endblock %}
+
+{% block page %} Database - Drying time for fruits at different drying temperature and thicknesses {% endblock %}
+
+{% block content %}
+<p></p>
+<table class="table table-striped">
+<tbody>
+
+<tr>
+    <td colspan="3">&nbsp;</td>
+    <th colspan="4", style="text-align:center;">Drying time (h) at temperature T</th>
+
+</tr>
+<tr>
+<th class="border-top border-bottom">Fruit</th>
+<th class="border-top border-bottom">Initial humidity<br />(d.b, kg water/kg dry product)</th>
+<th class="border-top border-bottom">Thickness&nbsp;<br />(mm)</th>
+<th class="border-top border-bottom">T = 40 &deg;C</th>
+<th class="border-top border-bottom">T = 50 &deg;C</th>
+<th class="border-top border-bottom">T = 60 &deg;C</th>
+<th class="border-top border-bottom">T = 70 &deg;C</th>
+</tr>
+<tr>
+<td>Apple</td>
+<td>5.2</td>
+<td>4.0</td>
+<td>5.3</td>
+<td>4.5</td>
+<td>3.9</td>
+<td>3.4</td>
+</tr>
+<tr>
+<td class="border-bottom">&nbsp;</td>
+<td class="border-bottom">&nbsp;</td>
+<td class="border-bottom">6.0</td>
+<td class="border-bottom">8.9</td>
+<td class="border-bottom">7.6</td>
+<td class="border-bottom">6.6</td>
+<td class="border-bottom">5.7</td>
+</tr>
+<tr>
+<td>Banana</td>
+<td>3.3</td>
+<td>4.0</td>
+<td>9.3</td>
+<td>8.0</td>
+<td>6.9</td>
+<td>6.0</td>
+</tr>
+<tr>
+<td class="border-bottom">&nbsp;</td>
+<td class="border-bottom">&nbsp;</td>
+<td class="border-bottom">6.0</td>
+<td class="border-bottom">15.8</td>
+<td class="border-bottom">13.5</td>
+<td class="border-bottom">11.7</td>
+<td class="border-bottom">10.2</td>
+</tr>
+<tr>
+<td>Mango</td>
+<td>5.0</td>
+<td>4.0</td>
+<td>6.0</td>
+<td>5.5</td>
+<td>5.1</td>
+<td>4.7</td>
+</tr>
+<tr>
+<td class="border-bottom">&nbsp;</td>
+<td class="border-bottom">&nbsp;</td>
+<td class="border-bottom">6.0</td>
+<td class="border-bottom">10.1</td>
+<td class="border-bottom">9.3</td>
+<td class="border-bottom">&nbsp;8.6</td>
+<td class="border-bottom">8.0</td>
+</tr>
+<tr>
+<td>Papaya</td>
+<td>7.5</td>
+<td>4.0</td>
+<td>6.1</td>
+<td>5.2</td>
+<td>4.6</td>
+<td>4.0</td>
+</tr>
+<tr>
+<td class="border-bottom">&nbsp;</td>
+<td class="border-bottom">&nbsp;</td>
+<td class="border-bottom">6.0</td>
+<td class="border-bottom">10.3</td>
+<td class="border-bottom">8.9</td>
+<td class="border-bottom">7.7</td>
+<td class="border-bottom">6.8</td>
+</tr>
+<tr>
+<td>Pineapple</td>
+<td>6.0</td>
+<td>4.0</td>
+<td>7.9</td>
+<td>7.0</td>
+<td>6.3</td>
+<td>5.7</td>
+</tr>
+<tr>
+<td class="border-bottom">&nbsp;</td>
+<td class="border-bottom">&nbsp;</td>
+<td class="border-bottom">6.0</td>
+<td class="border-bottom">13.3</td>
+<td class="border-bottom">11.8</td>
+<td class="border-bottom">10.6</td>
+<td class="border-bottom">9.6</td>
+</tr>
+</tbody>
+</table>
+
+
+<style>
+    .data-table {
+        border-collapse: collapse;
+    }
+    .border-top {
+        border-top: 1px solid #000;
+    }
+    .border-bottom {
+        border-bottom: 1px solid #000;
+    }
+
+    p {
+     margin-bottom: 1cm;
+  }
+</style>
+{% endblock %}

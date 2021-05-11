@@ -42,7 +42,7 @@ def J2(t, T, alpha, Td, t0, td):
         Args:
             t: time of the day, in range [t0, t0 + td] in seconds
             alpha: coefficient of the exponentiel """
-    Ea = 30 * 1000 # J/mol
+    Ea = 10 * 1000 # J/mol #TODO: diminuer à 10,000 (données Nada)
     Rg = 8.314     # J/mol*K
 
     return alpha * exp(-4 * (t - t0) / td) * exp(-Ea/Rg * (1/T - 1/Td))

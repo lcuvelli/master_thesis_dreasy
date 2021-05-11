@@ -29,6 +29,9 @@ def contacts():
 def about():
     return render_template('about.html')
 
+@app.route("/database")
+def database():
+    return render_template('database.html')
 
 @app.route("/dryer_dimensions")
 def dryerdimensions():
