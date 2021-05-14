@@ -2,7 +2,6 @@ import numpy as np
 import thermopy.iapws as th
 from sympy import symbols, solve
 import typing
-# -*-coding:Latin-1 -*
 
 
 # Definition des constantes (systeme international)

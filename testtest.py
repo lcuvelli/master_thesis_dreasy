@@ -13,13 +13,16 @@ print(lenght_sup_dryer(0.5,0.3,1.5))
 def hydaulic_diameter(H, h, Wd):
     """Calculates hydraulic parameter defined as the ratio of 4 times the surface by the perimeter"""
     Lsup = lenght_sup_dryer(H, h, Wd)
+    print('lsup', Lsup)
 
-    S = h * Wd + Wd * h / 2
-    print("S:", S)
+    S = h * Wd + Wd * (H-h) / 2
+
+    print("Surface:", S)
     P = H + h + Wd + Lsup
     print("P:", P)
 
     Lc = 4 * S / P
+    print("Lc", Lc)
     return Lc
 
 print(hydaulic_diameter(0.5,0.3,1.5))
