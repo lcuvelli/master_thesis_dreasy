@@ -90,6 +90,7 @@ def dryerdimensions():
     if request.method == 'GET':
         if request.args.get('Compute') == 'Compute':
             Tamb = Tamb_C + 273.15
+            print(Tamb_C, Tamb)
             Td = Td_C + 273.15
             density = fl.ATMOSPHERE_1976.density(Td, P_ATM)  # densité de l'air
             Q_kg_s = Q/3600 * density
@@ -153,8 +154,8 @@ def airflow():
 
     if request.method == 'GET':
         if request.args.get('Compute') == 'Compute':
-            Tamb = Tamb_C + 273  # Conversion Celsius to Kelvin
-            Td = Td_C + 273
+            Tamb = Tamb_C + 273.15  # Conversion Celsius to Kelvin
+            Td = Td_C + 273.15
             i = 0
 
             if Xf >= X0:
