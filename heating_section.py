@@ -10,20 +10,6 @@ import tikzplotlib
 from math import exp, pi, sin
 
 
-"""Constants"""
-
-"""Climatic data - Cambodia"""
-
-
-
-
-
-
-"""Specifications - Drying 10kg of mangoes in Cambodia"""
-
-
-
-
 #ep = 0.001 # m - Plastic thickness
 #lp = 0.2  # W/m*K - Plastic thermal conductivity
 #e = 6 / 1000  # m - Thickness of the slices of product
@@ -32,7 +18,7 @@ from math import exp, pi, sin
 Tmax = 90   # °C - maximal Tair allowed at the end of the heating section along the day #TODO: discuss function product
 tol = 5     # °C (or K) - tolerance on the mean temperature in the dryer
 
-DELTA_Z = 0.1
+DELTA_Z = 0.5
 DELTA_T = 0.5
 ADD_STORAGE = True
 STORAGE = {}
@@ -77,6 +63,7 @@ def temperature_time_t(Tamb, t, Iatm, Sm, tset, trise, Lc, R, k, LH, Q, Ca, Wd)-
     s0 = [310, 320, 350] # Initial vector
     x = fsolve(balance_equations_heating, s0, args=data)
 
+    i = 0
     while z < LH:
         z = round(z + DELTA_Z, 2)
         P = x[2]
@@ -87,9 +74,9 @@ def temperature_time_t(Tamb, t, Iatm, Sm, tset, trise, Lc, R, k, LH, Q, Ca, Wd)-
 
 
     # TODO: remettre print
-        print("En (z,t) = (", z, ",", t, "): ", "(Tp, Tfl, P) = (",x[0]-273, "°C,", x[1]-273, "°C,", P, "W/m2) \n")
+        print(i,": En (z,t) = (", z, ",", t, "): ", "(Tp, Tfl, P) = (",x[0]-273, "°C,", x[1]-273, "°C,", P, "W/m2) \n")
         #print(isclose(balance_equations_Tp(x, Tair, t), [0.0, 0.0, 0.0]))  # Check if numerical solution makes sense
-
+        i += 1
         # Dictionnary filled only once
         if ADD_STORAGE :
             y = x.tolist()
@@ -169,7 +156,8 @@ def estimate_length_heating(Tair_LH: list, LH, td, Td):
 
     # Criteria 2
     mean_temperature = tools.darboux_sum(Tair_LH, DELTA_T) / td
-    print("with LH = ", LH, " mean Td is : ", mean_temperature, " °C")
+    print("Note: with LH = ", LH, " mean Td is : ", mean_temperature, " °C")
+    print(mean_temperature, Td, abs(mean_temperature-Td))
     if abs(mean_temperature - Td) < tol :
         result = 0
 
@@ -244,7 +232,7 @@ def main():
     Q = 0.03  # kg of humid air/s - Air flow rate
     Wd = 1.4  # m - Width of the dryer
     td = 6.5
-    Td = 70
+    Td = 80
 
 
     solution = compute_heating_length(Tamb, Iatm, Sm, tset, trise, Lc, R, k, Q, Wd, td, Td)
@@ -264,7 +252,6 @@ def compute_heating_length(Tamb, Iatm, Sm, tset, trise, Lc, R, k, Q, Wd, td, Td)
     print("Wd:", Wd)
     print("td:", td)
     print("Td:", Td)
-    Td = Td - 273
     t0 = start_time_drying(td, tset, trise)
     tf = td + t0  # h - End of drying
     Ca = 1009  # Heat capacity air, J/kg/K (assumed constant)
@@ -287,7 +274,7 @@ def compute_heating_length(Tamb, Iatm, Sm, tset, trise, Lc, R, k, Q, Wd, td, Td)
 
     # Get Tair and P profile in z = LH and
     for i in range(len(profile_end_heating)):
-        Tair_LH.append(profile_end_heating[i][air] - 273)  # Converting temperature from K to °C
+        Tair_LH.append(profile_end_heating[i][air] - 273.15)  # Converting temperature from K to °C
         P_LH.append(profile_end_heating[i][energy])
 
     t = t0
