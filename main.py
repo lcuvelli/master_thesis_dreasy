@@ -1,11 +1,10 @@
+from time import process_time
+import fluids.atmosphere as fl
 from flask import Flask, render_template
 from flask import request, flash, Markup
 
-from time import process_time
-import air_flow_rate as airflowlib
-import heating_section as heatsectionlib
-import drying_section as dryingsectionlib
-import fluids.atmosphere as fl
+from model import heating_section as heatsectionlib, air_flow_rate as airflowlib, drying_section as dryingsectionlib
+
 P_ATM = 101325  # atm pressure  (Pa)
 
 
@@ -127,6 +126,7 @@ def dryerdimensions():
 
 
                 solution['LD'] = drying_length['LD']
+                solution['Td_mean'] = round(solution['Td_mean'], 1)
                 solution['omega_mean'] = drying_length['omega_mean']
                 print("LD:", solution['LD'])
                 print("omega_mean:", solution['omega_mean'])
@@ -152,36 +152,36 @@ def airflow():
     Td_C = request.args.get("Td_C", type=float)
 
 
-    if request.method == 'GET':
-        if request.args.get('Compute') == 'Compute':
-            Tamb = Tamb_C + 273.15  # Conversion Celsius to Kelvin
-            Td = Td_C + 273.15
-            i = 0
+    #if request.method == 'GET':
+    if request.args.get('Compute') == 'Compute':
+        Tamb = Tamb_C + 273.15  # Conversion Celsius to Kelvin
+        Td = Td_C + 273.15
+        i = 0
 
-            if Xf >= X0:
+        if Xf >= X0:
+            message = Markup(
+                'Warning: Final moisture content of the product (X<sub>f</sub>) should be <b>lower</b> than inital moisture (X<sub>0</sub>).')
+            i += 1
+            flash(message)
+
+        if Tamb >= Td:
+            message = Markup(
+                'Warning: Ambient temperature (T<sub>amb</sub>) should be <b>lower</b> than drying temperature (T<sub>d</sub>).')
+            flash(message)
+            i += 1
+
+        elif (i == 0):
+            mass_to_evaporate = M0 / (1 + X0) * (X0 - Xf)
+            mass_to_evaporate = round(mass_to_evaporate,1)
+            density = fl.ATMOSPHERE_1976.density(Td, P_ATM) # densité de l'air
+            Q = airflowlib.compute_air_flow_rate(RHamb, Tamb, M0, X0, Xf, td, Td)
+            Q = round(Q * 3600 / density,1)   # in m^3/h
+
+            if Q < 0:
                 message = Markup(
-                    'Warning: Final moisture content of the product (X<sub>f</sub>) should be <b>lower</b> than inital moisture (X<sub>0</sub>).')
-                i += 1
+                    'Error: Minimal air flow is negative. Not feasible with conditions given. Please try again.')
                 flash(message)
-
-            if Tamb >= Td:
-                message = Markup(
-                    'Warning: Ambient temperature (T<sub>amb</sub>) should be <b>lower</b> than drying temperature (T<sub>d</sub>).')
-                flash(message)
-                i += 1
-
-            elif (i == 0):
-                mass_to_evaporate = M0 / (1 + X0) * (X0 - Xf)
-                mass_to_evaporate = round(mass_to_evaporate,1)
-                density = fl.ATMOSPHERE_1976.density(Td, P_ATM) # densité de l'air
-                Q = airflowlib.compute_air_flow_rate(RHamb, Tamb, M0, X0, Xf, td, Td)
-                Q = round(Q * 3600 / density,1)   # in m^3/h
-
-                if Q < 0:
-                    message = Markup(
-                        'Error: Minimal air flow is negative. Not feasible with conditions given. Please try again.')
-                    flash(message)
-                print(Q)
+            print(Q)
 
     context = {"RHamb": RHamb, "Tamb_C": Tamb_C, "M0": M0, "X0": X0, "Xf": Xf, "td": td, "Td_C": Td_C, "Q": Q}
 

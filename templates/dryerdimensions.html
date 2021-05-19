@@ -181,10 +181,10 @@
 
    {% else %}
   You should start your drying at <b> {{ context['t0'] }} h </b> <br>
-  Heating length should be: <b> {{ solution['LH'] }} m </b> to achieve <b> {{ solution['Td_mean'] }} °C </b> as temperature in the heating section <br>
-  {{ solution['TTair_LH'] }} <br>
-  {{ solution['P'] }} <br>
-  Drying length should be: <b> {{ solution['LD'] }} m </b>. Omega mean is {{ solution['omega_mean'] }} m<sub>2</sub>
+  Heating length should be: <b> {{ solution['LH'] }} m </b> to achieve <b> {{ solution['Td_mean'] }} °C </b> as temperature in the heating section. <br>
+
+  Drying length should be: <b> {{ solution['LD'] }} m
+   </b>. Omega mean is {{ solution['omega_mean'] }} m<sub>2</sub>
 
    {% endif %}
 

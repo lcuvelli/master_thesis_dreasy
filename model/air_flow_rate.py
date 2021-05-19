@@ -1,7 +1,5 @@
-import numpy as np
 import thermopy.iapws as th
 from sympy import symbols, solve
-import typing
 
 
 # Definition des constantes (systeme international)

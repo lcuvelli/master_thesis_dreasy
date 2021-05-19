@@ -1,18 +1,8 @@
-import heat_transfer_coefficient as libh
-
-from scipy.optimize import fsolve
-from numpy import isclose, polyfit
-import matplotlib.pyplot as plt
-import tikzplotlib
-import numpy as np
-from tools import darboux_sum
-import matplotlib as mpl
-import pylab as pl
-
-
-
 from math import exp
-import timeit
+
+import numpy as np
+
+from model.tools import darboux_sum
 
 Lw = 2358 * 1000 # J/kg - Mass latent heat of vaporization #TODO: change in function of T
 DELTA_T = 0.5
@@ -59,8 +49,12 @@ def main():
     td = 6.5
     t0 = 9.75
     Td = 60
-    P = [103.41795242855638, 118.20109639903882, 130.5727354591062, 140.49568166041038, 147.94938753590725, 152.9228829562677, 155.41072879588936, 155.41072879588936, 152.9228829562677, 147.94938753590733, 140.49568166041038, 130.5727354591062, 118.20109639903882, 103.41795242855643]
-    T = [49.04896603568676, 52.15320421477281, 54.80630083601244, 56.970206685130734, 58.616526550720494, 59.72496007067514, 60.28239569511095, 60.28239569511095, 59.72496007067514, 58.616526550720494, 56.970206685130734, 54.80630083601244, 52.15320421477281, 49.04896603568676]
+    P = [100.34373691424814, 114.3559869703552, 126.03400987585604, 135.36851465301027, 142.36130489254745,
+     147.0181925255959, 149.34493444596555, 149.34493444596555, 147.0181925255959, 142.36130489254754,
+     135.36851465301027, 126.03400987585604, 114.3559869703552, 100.34373691424793]
+    T = [49.61305183372599, 52.822449116416635, 55.56785537435013, 57.80856028577267, 59.51415472970882, 60.662886998728254,
+     61.24070377349716, 61.24070377349716, 60.662886998728254, 59.51415472970882, 57.80856028577267, 55.56785537435013,
+     52.822449116416635, 49.61305183372605]
     Wd = 1.5 #m
     M0 = 10 #kg
 
@@ -82,27 +76,24 @@ def compute_drying_length(X0, Xf, M0, td, t0, Td, Wd, P:list, T:list):
     tf = t0 + td
     intervals_t = np.arange(t0, t0 + td + DELTA_T, DELTA_T).tolist()
     alpha = evaporation_coefficient(X0, Xf, td)
-    print(alpha)
 
-    y = []
+    evaporation_rate_J = []
     for i in range(len(T)):
-        y.append(J2(intervals_t[i],T[i]+273, alpha, Td+273, t0, td))
-        #y.append(J(intervals_t[i], alpha))
+        evaporation_rate_J.append(J2(intervals_t[i],T[i]+273, alpha, Td+273, t0, td))
 
-    t = t0
-    M = []
-    i = 0
-    while t <= tf:
-        M.append(M0 / (1+X0) * Lw * y[i]/P[i])
-        M[i] = M[i]/Wd
-        t+= DELTA_T
-        i+=1
 
-    mean = round(darboux_sum(M,DELTA_T)/td,3)
-    print("Moyenne pour la zone de séchage:", mean, "m^2")
-    LD = round(mean/Wd,3)
-    print("Longueur de la zone de séchage:", LD)
-    solution = {"LD": LD, "omega_mean": mean}
+    mean_evaporation_rate = darboux_sum(evaporation_rate_J, DELTA_T)
+    mean_P = darboux_sum(P, DELTA_T)
+
+    MS = (1+X0)/Lw * mean_P/mean_evaporation_rate
+    print("Mass of product per unit area:", round(MS,2), "kg/m2")
+    print("Area needed:", round(M0/MS,2), "m2")
+    LD = M0 / (MS * Wd)
+    print("Length of the drying section:", round(LD,2), "m")
+
+
+
+    solution = {"LD": LD}
 
     return solution
 

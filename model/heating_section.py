@@ -1,14 +1,11 @@
-import heat_transfer_coefficient as libh
-
-from scipy.optimize import fsolve
-from numpy import isclose, polyfit
-import matplotlib.pyplot as plt
+from math import pi, sin
 from math import sqrt, pow
-import tools as tools
-import tikzplotlib
+from time import process_time
 
-from math import exp, pi, sin
+import matplotlib.pyplot as plt
+from scipy.optimize import fsolve
 
+from model import heat_transfer_coefficient as libh, tools as tools
 
 #ep = 0.001 # m - Plastic thickness
 #lp = 0.2  # W/m*K - Plastic thermal conductivity
@@ -107,7 +104,8 @@ def balance_equations_heating(vars, *data):
     # Heat transfer coefficients depend on the temperatures
     h_fl_air = libh.convective_heat_transfer_coefficient(Tfl, Tair, Lc)
     h_p_air = libh.convective_heat_transfer_coefficient(Tp, Tair, Lc)
-    h_star = 10 #libh.convective_heat_transfer_coefficient(Tp, Tamb, Lsup)
+    h_star = libh.convective_heat_transfer_coefficient(Tp, Tamb, 2.3)
+    #print("h_star", h_star)
 
     eq1 = Iatm + direct_diffuse_solar_radiation(Sm, tset, trise, t) - h_star * (Tp - Tamb) - libh.infrared_energy_flux(Tp)
     eq2 = P - h_fl_air * (Tfl - Tair) - h_p_air * (Tp - Tair) * R
@@ -196,7 +194,7 @@ def temperatures_heating_section(Tamb, td, Iatm, Sm, tset, trise, Lc, R, k, LH, 
 
 def filter_dictionnary(zmax):
     "Filters the dictionnary for all values of z == zmax. Returns the filtered dictionnary"
-    filtered_dic = {k: v for (k, v) in STORAGE.items() if tools.key_satifies_condition(k,zmax)}
+    filtered_dic = {k: v for (k, v) in STORAGE.items() if tools.key_satifies_condition(k, zmax)}
     return filtered_dic
 
 def find_next_value(test_length_heating, res, LH, intervals_z):
@@ -229,13 +227,15 @@ def main():
     R = 1.4  # m - Aspect ratio
     Lc = 0.7  # m - Hydraulic diamater #fixed by cross section
     k = 0.85  # Reduction factor
-    Q = 0.03  # kg of humid air/s - Air flow rate
-    Wd = 1.4  # m - Width of the dryer
+    Q = 89 / 3600 * 1.204  # kg of humid air/s - Air flow rate
+    print(Q)
+    Wd = 1.5  # m - Width of the dryer
     td = 6.5
-    Td = 80
+    Td = 60+273.15
 
 
     solution = compute_heating_length(Tamb, Iatm, Sm, tset, trise, Lc, R, k, Q, Wd, td, Td)
+
     print(solution['Tair_LH'], "\n", solution['LH'], "\n", solution['P_LH'], "\n")
 
 def compute_heating_length(Tamb, Iatm, Sm, tset, trise, Lc, R, k, Q, Wd, td, Td):
@@ -252,6 +252,7 @@ def compute_heating_length(Tamb, Iatm, Sm, tset, trise, Lc, R, k, Q, Wd, td, Td)
     print("Wd:", Wd)
     print("td:", td)
     print("Td:", Td)
+    Td = Td - 273
     t0 = start_time_drying(td, tset, trise)
     tf = td + t0  # h - End of drying
     Ca = 1009  # Heat capacity air, J/kg/K (assumed constant)
@@ -269,7 +270,11 @@ def compute_heating_length(Tamb, Iatm, Sm, tset, trise, Lc, R, k, Q, Wd, td, Td)
     global ADD_STORAGE
     ADD_STORAGE = True
 
+    t1_start = process_time()
     profile_end_heating = temperatures_heating_section(Tamb, td, Iatm, Sm, tset, trise, Lc, R, k, LH, Q, Ca, Wd)
+    t1_stop = process_time()
+    print("Elapsed time during the whole program in seconds:",
+          t1_stop - t1_start)
     ADD_STORAGE = False
 
     # Get Tair and P profile in z = LH and
