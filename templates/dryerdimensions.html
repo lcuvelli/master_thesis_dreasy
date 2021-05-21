@@ -179,7 +179,11 @@
   {% if context['t0'] == null or context['t0'] == "" %}
    <b> Please fill all attributes. Results will appear here. Computation might take a few minutes.</b>
 
-   {% else %}
+  {%  elif solution['Tair_LH'] == 0 %}
+    <b> The maximum heating length {{ solution['LH'] }} m has been reached ! With a heating length of {{ solution['LH'] }} m, the
+    mean temperature of the air at the end of the heating section is {{ solution['Td_mean'] }} °C
+    Please try again with other parameters </b>
+  {% else %}
   You should start your drying at <b> {{ context['t0'] }} h </b> <br>
   Heating length should be: <b> {{ solution['LH'] }} m </b> to achieve <b> {{ solution['Td_mean'] }} °C </b> as temperature in the heating section. <br>
 

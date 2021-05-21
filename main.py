@@ -114,21 +114,26 @@ def dryerdimensions():
 
                 print(X0, Xf, td)
                 solution = heatsectionlib.compute_heating_length(Tamb, Iatm, Sm, tset, trise, Lc, R, k, Q_kg_s, Wd, td, Td)
-                print("Tair:", solution['Tair_LH'])
-                print("P:", solution['P_LH'])
+                if solution['Tair_LH'] == 0:
+                    print("LH max reached")
+                    solution['Td_mean'] = round(solution['Td_mean'], 1)
+
+                else:
+                    print("Tair:", solution['Tair_LH'])
+                    print("P:", solution['P_LH'])
 
 
-                t1_stop = process_time()
+                    t1_stop = process_time()
 
-                print("Elapsed time during the whole program in seconds:",
-                      t1_stop - t1_start)
-                drying_length = dryingsectionlib.compute_drying_length(X0, Xf, M0, td, t0, Td-273, Wd, solution['P_LH'], solution['Tair_LH'] )
+                    print("Elapsed time during the whole program in seconds:",
+                          t1_stop - t1_start)
+                    drying_length = dryingsectionlib.compute_drying_length(X0, Xf, M0, td, t0, Td-273, Wd, solution['P_LH'], solution['Tair_LH'] )
 
 
-                solution['LD'] = round(drying_length['LD'],1)
-                solution['Td_mean'] = round(solution['Td_mean'], 1)
-                print("LD:", solution['LD'])
-                status = "waiting"
+                    solution['LD'] = round(drying_length['LD'],1)
+                    solution['Td_mean'] = round(solution['Td_mean'], 1)
+                    print("LD:", solution['LD'])
+                    status = "waiting"
 
     context = {"RHamb": RHamb, "Tamb_C": Tamb_C, "Sm": Sm, "trise": trise, "tset": tset,
                "R": R, "td": td, "t0": t0, "Iatm": Iatm, "Q": Q, "Td_C": Td_C, "M0": M0,

@@ -2,21 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="d87e9a9e-bedc-4bf5-98ec-650c9672e137" name="Default" comment="">
-      <change type="DELETED" beforePath="$PROJECT_DIR$/appengine_config.py" afterPath="" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/static/Contacts/BHaut.png" afterPath="$PROJECT_DIR$/static/Contacts/BHaut.png" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/static/Contacts/LCuvelliez.png" afterPath="$PROJECT_DIR$/static/Contacts/LCuvelliez.png" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/static/cross_section.png" afterPath="$PROJECT_DIR$/static/cross_section.png" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/static/dryer.png" afterPath="$PROJECT_DIR$/static/dryer.png" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app.yaml" afterPath="$PROJECT_DIR$/app.yaml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/main.py" afterPath="$PROJECT_DIR$/main.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/model/drying_section.py" afterPath="$PROJECT_DIR$/model/drying_section.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/model/heating_section.py" afterPath="$PROJECT_DIR$/model/heating_section.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/templates/airflow.html" afterPath="$PROJECT_DIR$/templates/airflow.html" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/templates/dryerdimensions.html" afterPath="$PROJECT_DIR$/templates/dryerdimensions.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/templates/home.html" afterPath="$PROJECT_DIR$/templates/home.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/testtest.py" afterPath="$PROJECT_DIR$/testtest.py" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -27,15 +15,14 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="main.py" pinned="false" current-in-tab="false">
+      <file leaf-file-name="main.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/main.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="330">
-              <caret line="22" column="16" lean-forward="true" selection-start-line="22" selection-start-column="16" selection-end-line="22" selection-end-column="16" />
+            <state relative-caret-position="152">
+              <caret line="133" column="71" lean-forward="true" selection-start-line="133" selection-start-column="71" selection-end-line="133" selection-end-column="71" />
               <folding>
                 <element signature="e#0#29#0" expanded="true" />
-                <element signature="e#784#4469#0" expanded="false" />
-                <element signature="e#4513#6382#0" expanded="false" />
+                <element signature="e#4737#6606#0" expanded="false" />
               </folding>
             </state>
           </provider>
@@ -61,11 +48,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="heating_section.py" pinned="false" current-in-tab="true">
+      <file leaf-file-name="heating_section.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/model/heating_section.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="315">
-              <caret line="119" column="0" lean-forward="true" selection-start-line="119" selection-start-column="0" selection-end-line="119" selection-end-column="0" />
+            <state relative-caret-position="331">
+              <caret line="299" column="0" lean-forward="true" selection-start-line="299" selection-start-column="0" selection-end-line="299" selection-end-column="0" />
               <folding>
                 <element signature="e#0#24#0" expanded="true" />
               </folding>
@@ -73,60 +60,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="contacts.html" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/templates/contacts.html">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="380">
-              <caret line="58" column="16" lean-forward="false" selection-start-line="58" selection-start-column="16" selection-end-line="58" selection-end-column="16" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="drying_section.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/model/drying_section.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="825">
-              <caret line="59" column="33" lean-forward="true" selection-start-line="59" selection-start-column="33" selection-end-line="59" selection-end-column="33" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="testtest.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/testtest.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="138">
-              <caret line="18" column="17" lean-forward="true" selection-start-line="18" selection-start-column="17" selection-end-line="18" selection-end-column="17" />
-              <folding>
-                <element signature="e#0#21#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="airflow.html" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/templates/airflow.html">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="196">
-              <caret line="122" column="108" lean-forward="false" selection-start-line="122" selection-start-column="108" selection-end-line="122" selection-end-column="108" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="cross_section.png" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/static/cross_section.png">
-          <provider selected="true" editor-type-id="images">
-            <state />
-          </provider>
-        </entry>
-      </file>
       <file leaf-file-name="dryerdimensions.html" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/templates/dryerdimensions.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="279">
-              <caret line="217" column="7" lean-forward="true" selection-start-line="217" selection-start-column="7" selection-end-line="217" selection-end-column="7" />
+            <state relative-caret-position="218">
+              <caret line="185" column="12" lean-forward="true" selection-start-line="185" selection-start-column="12" selection-end-line="185" selection-end-column="12" />
               <folding>
                 <element signature="n#form#0;n#!!top" expanded="false" />
                 <element signature="n#style#0;n#img#0;n#div#2;n#!!top" expanded="true" />
@@ -147,7 +85,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>not</find>
       <find>evapora</find>
       <find>databse</find>
       <find>fav</find>
@@ -170,13 +107,14 @@
       <find>td</find>
       <find>print(h</find>
       <find>h_st</find>
-      <find>h_sta</find>
       <find>LH = 10</find>
       <find>LH =</find>
       <find>are</find>
       <find>LH =</find>
       <find>h_s</find>
       <find>LH</find>
+      <find>h_sta</find>
+      <find>return</find>
     </findStrings>
     <replaceStrings>
       <replace>col-xl-4</replace>
@@ -205,14 +143,14 @@
         <option value="$PROJECT_DIR$/heating_section.py" />
         <option value="$PROJECT_DIR$/model/air_flow_rate.py" />
         <option value="$PROJECT_DIR$/model/tools.py" />
-        <option value="$PROJECT_DIR$/main.py" />
         <option value="$PROJECT_DIR$/app.yaml" />
         <option value="$PROJECT_DIR$/testtest.py" />
         <option value="$PROJECT_DIR$/model/drying_section.py" />
         <option value="$PROJECT_DIR$/templates/home.html" />
         <option value="$PROJECT_DIR$/templates/airflow.html" />
-        <option value="$PROJECT_DIR$/templates/dryerdimensions.html" />
         <option value="$PROJECT_DIR$/model/heating_section.py" />
+        <option value="$PROJECT_DIR$/templates/dryerdimensions.html" />
+        <option value="$PROJECT_DIR$/main.py" />
       </list>
     </option>
   </component>
@@ -781,26 +719,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/main.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="330">
-          <caret line="22" column="16" lean-forward="true" selection-start-line="22" selection-start-column="16" selection-end-line="22" selection-end-column="16" />
-          <folding>
-            <element signature="e#0#29#0" expanded="true" />
-            <element signature="e#784#4469#0" expanded="false" />
-            <element signature="e#4513#6382#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/templates/contacts.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="380">
-          <caret line="58" column="16" lean-forward="false" selection-start-line="58" selection-start-column="16" selection-end-line="58" selection-end-column="16" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/templates/home.html">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="307">
@@ -822,9 +740,17 @@
         <state />
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/templates/contacts.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="380">
+          <caret line="58" column="16" lean-forward="false" selection-start-line="58" selection-start-column="16" selection-end-line="58" selection-end-column="16" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/testtest.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="138">
+        <state relative-caret-position="137">
           <caret line="18" column="17" lean-forward="true" selection-start-line="18" selection-start-column="17" selection-end-line="18" selection-end-column="17" />
           <folding>
             <element signature="e#0#21#0" expanded="true" />
@@ -832,10 +758,28 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/model/drying_section.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-726">
+          <caret line="20" column="40" lean-forward="false" selection-start-line="20" selection-start-column="40" selection-end-line="20" selection-end-column="40" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/model/heating_section.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="331">
+          <caret line="299" column="0" lean-forward="true" selection-start-line="299" selection-start-column="0" selection-end-line="299" selection-end-column="0" />
+          <folding>
+            <element signature="e#0#24#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/templates/dryerdimensions.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="279">
-          <caret line="217" column="7" lean-forward="true" selection-start-line="217" selection-start-column="7" selection-end-line="217" selection-end-column="7" />
+        <state relative-caret-position="218">
+          <caret line="185" column="12" lean-forward="true" selection-start-line="185" selection-start-column="12" selection-end-line="185" selection-end-column="12" />
           <folding>
             <element signature="n#form#0;n#!!top" expanded="false" />
             <element signature="n#style#0;n#img#0;n#div#2;n#!!top" expanded="true" />
@@ -843,20 +787,13 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/model/drying_section.py">
+    <entry file="file://$PROJECT_DIR$/main.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="825">
-          <caret line="59" column="33" lean-forward="true" selection-start-line="59" selection-start-column="33" selection-end-line="59" selection-end-column="33" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/model/heating_section.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="315">
-          <caret line="119" column="0" lean-forward="true" selection-start-line="119" selection-start-column="0" selection-end-line="119" selection-end-column="0" />
+        <state relative-caret-position="152">
+          <caret line="133" column="71" lean-forward="true" selection-start-line="133" selection-start-column="71" selection-end-line="133" selection-end-column="71" />
           <folding>
-            <element signature="e#0#24#0" expanded="true" />
+            <element signature="e#0#29#0" expanded="true" />
+            <element signature="e#4737#6606#0" expanded="false" />
           </folding>
         </state>
       </provider>

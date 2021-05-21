@@ -294,7 +294,9 @@ def compute_heating_length(Tamb, Iatm, Sm, tset, trise, Lc, R, k, Q, Wd, td, Td)
     if res == 1 :
         mean_temperature = tools.darboux_sum(Tair_LH, DELTA_T) / td
         print("Note: with LH,max = ", LH, " mean Td is : ", mean_temperature, " °C")
-        return 0 #TODO: gérer le cas dans le site web
+        solution = {"LH": LH, "Td_mean": mean_temperature, "Tair_LH": 0}
+        return solution
+        #TODO: gérer le cas dans le site web
 
     test_length_heating = [0]  # Keeps track of the LH values tested
     filtered_storage = filter_dictionnary(LH)
