@@ -1,6 +1,7 @@
 from math import pi, sin
 from math import sqrt, pow
 from time import process_time
+import os
 
 import matplotlib.pyplot as plt
 from scipy.optimize import fsolve
@@ -11,11 +12,10 @@ from model import heat_transfer_coefficient as libh, tools as tools
 #lp = 0.2  # W/m*K - Plastic thermal conductivity
 #e = 6 / 1000  # m - Thickness of the slices of product
 
-#h_star = 10                        #TODO: how to fix this parameter ?
 Tmax = 90   # °C - maximal Tair allowed at the end of the heating section along the day #TODO: discuss function product
-tol = 5     # °C (or K) - tolerance on the mean temperature in the dryer
+tol = 2    # °C (or K) - tolerance on the mean temperature in the dryer
 
-DELTA_Z = 0.5
+DELTA_Z = 0.1
 DELTA_T = 0.5
 ADD_STORAGE = True
 STORAGE = {}
@@ -104,8 +104,8 @@ def balance_equations_heating(vars, *data):
     # Heat transfer coefficients depend on the temperatures
     h_fl_air = libh.convective_heat_transfer_coefficient(Tfl, Tair, Lc)
     h_p_air = libh.convective_heat_transfer_coefficient(Tp, Tair, Lc)
-    h_star = libh.convective_heat_transfer_coefficient(Tp, Tamb, 2.3)
-    #print("h_star", h_star)
+    h_star = 10 # libh.convective_heat_transfer_coefficient(Tp, Tamb, 2.3)
+    #print(h_star, h_fl_air, h_p_air)
 
     eq1 = Iatm + direct_diffuse_solar_radiation(Sm, tset, trise, t) - h_star * (Tp - Tamb) - libh.infrared_energy_flux(Tp)
     eq2 = P - h_fl_air * (Tfl - Tair) - h_p_air * (Tp - Tair) * R
@@ -176,19 +176,22 @@ def start_time_drying(td, tset, trise):
 
 def temperatures_heating_section(Tamb, td, Iatm, Sm, tset, trise, Lc, R, k, LH, Q, Ca, Wd)->list:
     """Gives the temperature profile at the end of the drying section is calculated for a certain length of the
-    drying section.
+    drying section. We only calculate half of time because it is symetric (S(t) is symetric)
 
     Args:
        LH: length of the drying section  """
 
     t = start_time_drying(td, tset, trise)
+    t0 = start_time_drying(td, tset, trise)
     tf = t + td
+    mid_drying = (t0 + tf)/2
     profile_end_heating = []
 
     while t <= tf:
         x = temperature_time_t(Tamb, t, Iatm, Sm, tset, trise, Lc, R, k, LH, Q, Ca, Wd)
         profile_end_heating.append(x)
         t += DELTA_T
+    print(profile_end_heating)
 
     return profile_end_heating
 
@@ -219,24 +222,24 @@ def find_next_value(test_length_heating, res, LH, intervals_z):
 
 
 def main():
-    Tamb = 30 + 273  # °K (mean diurnal temperature)
-    Iatm = 377  # W/m2
-    Sm = 463  # W/m2
-    tset = 19  # h - Time sunset
-    trise = 7  # h - Time sunrise
-    R = 1.4  # m - Aspect ratio
-    Lc = 0.7  # m - Hydraulic diamater #fixed by cross section
+    Tamb = 28 + 273.15  # °K (mean diurnal temperature)
+    Iatm = 322  # W/m2
+    Sm = 613  # W/m2
+    tset = 18  # h - Time sunset
+    trise = 6  # h - Time sunrise
+    R = 1.5  # m - Aspect ratio
+    Lc = 0.66  # m - Hydraulic diamater #fixed by cross section
     k = 0.85  # Reduction factor
-    Q = 89 / 3600 * 1.204  # kg of humid air/s - Air flow rate
-    print(Q)
-    Wd = 1.5  # m - Width of the dryer
-    td = 6.5
-    Td = 60+273.15
+    Q = 0.024 #(au lieu de 0.023)  # kg of humid air/s - Air flow rate
+    Wd = 1.95  # m - Width of the dryer
+    td = 8
+    Td = 72+273.15
 
 
     solution = compute_heating_length(Tamb, Iatm, Sm, tset, trise, Lc, R, k, Q, Wd, td, Td)
 
     print(solution['Tair_LH'], "\n", solution['LH'], "\n", solution['P_LH'], "\n")
+    os.system('say "over"')
 
 def compute_heating_length(Tamb, Iatm, Sm, tset, trise, Lc, R, k, Q, Wd, td, Td):
 
@@ -252,13 +255,13 @@ def compute_heating_length(Tamb, Iatm, Sm, tset, trise, Lc, R, k, Q, Wd, td, Td)
     print("Wd:", Wd)
     print("td:", td)
     print("Td:", Td)
-    Td = Td - 273
+    Td = Td - 273.15
     t0 = start_time_drying(td, tset, trise)
     tf = td + t0  # h - End of drying
     Ca = 1009  # Heat capacity air, J/kg/K (assumed constant)
 
 
-    LH = 10
+    LH = 4.4
     air = 3  # Tair is the 4th element of vector x
     energy = 2  # P is the 3rd element of vector x
     Tair_LH, P_LH, intervals_z, intervals = [], [], [], []
@@ -288,6 +291,10 @@ def compute_heating_length(Tamb, Iatm, Sm, tset, trise, Lc, R, k, Q, Wd, td, Td)
         t += DELTA_T
 
     res = estimate_length_heating(Tair_LH, LH, td, Td)
+    if res == 1 :
+        mean_temperature = tools.darboux_sum(Tair_LH, DELTA_T) / td
+        print("Note: with LH,max = ", LH, " mean Td is : ", mean_temperature, " °C")
+        return 0 #TODO: gérer le cas dans le site web
 
     test_length_heating = [0]  # Keeps track of the LH values tested
     filtered_storage = filter_dictionnary(LH)

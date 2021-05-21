@@ -184,7 +184,6 @@
   Heating length should be: <b> {{ solution['LH'] }} m </b> to achieve <b> {{ solution['Td_mean'] }} °C </b> as temperature in the heating section. <br>
 
   Drying length should be: <b> {{ solution['LD'] }} m
-   </b>. Omega mean is {{ solution['omega_mean'] }} m<sub>2</sub>
 
    {% endif %}
 
@@ -209,9 +208,11 @@
         {% endfor %}
     </div>
 
-  <div class="illustration" >
-      <img src="/static/cross_section.png" style="width:100%;max-width:400px">
-    </div>
+<div class="text-center">
+  <img src="/static/cross_section.png" class="rounded mx-auto d-block" alt="Cross section" style="width:100%;max-width:400px">
+</div>
+
+
 
 
 <style>

@@ -125,11 +125,9 @@ def dryerdimensions():
                 drying_length = dryingsectionlib.compute_drying_length(X0, Xf, M0, td, t0, Td-273, Wd, solution['P_LH'], solution['Tair_LH'] )
 
 
-                solution['LD'] = drying_length['LD']
+                solution['LD'] = round(drying_length['LD'],1)
                 solution['Td_mean'] = round(solution['Td_mean'], 1)
-                solution['omega_mean'] = drying_length['omega_mean']
                 print("LD:", solution['LD'])
-                print("omega_mean:", solution['omega_mean'])
                 status = "waiting"
 
     context = {"RHamb": RHamb, "Tamb_C": Tamb_C, "Sm": Sm, "trise": trise, "tset": tset,
@@ -173,7 +171,7 @@ def airflow():
         elif (i == 0):
             mass_to_evaporate = M0 / (1 + X0) * (X0 - Xf)
             mass_to_evaporate = round(mass_to_evaporate,1)
-            density = fl.ATMOSPHERE_1976.density(Td, P_ATM) # densité de l'air
+            density = 1.014 #fl.ATMOSPHERE_1976.density(Td, P_ATM) # densité de l'air
             Q = airflowlib.compute_air_flow_rate(RHamb, Tamb, M0, X0, Xf, td, Td)
             Q = round(Q * 3600 / density,1)   # in m^3/h
 

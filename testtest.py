@@ -16,6 +16,9 @@ def hydaulic_diameter(H, h, Wd):
     Lsup = lenght_sup_dryer(H, h, Wd)
     print('lsup', Lsup)
     print("Wp:", H+h+Lsup)
+    Wp = H+h+Lsup
+    R = Wp/Wd
+    print("Aspect ratio R:", R)
 
     S = h * Wd + Wd * (H-h) / 2
 
@@ -27,23 +30,45 @@ def hydaulic_diameter(H, h, Wd):
     print("Lc", Lc)
     return Lc
 
-print(hydaulic_diameter(0.5,0.3,1.5))
+print(hydaulic_diameter(0.5,0.3,1.95))
 
-print("h*:", libh.convective_heat_transfer_coefficient(300, 330, 1.5))
-print("hnormal:", libh.convective_heat_transfer_coefficient(300, 330, 0.7))
-context = {}
-context = {"Tair": 3}
-print(context['Tair'])
-context['Tair'] = context['Tair'] + 273
-print(context['Tair'])
 
-mean = 854.6030817517924
-t = [98.52746178174782, 113.00905101306793, 124.77157377227094, 133.98832994109864, 140.79144189752225, 145.27589319897746, 147.50306103798133, 147.50306103798133, 145.27589319897746, 140.79144189752225, 133.98832994109864, 124.77157377227094, 113.00905101306793, 98.52746178174783]
-test = tool.darboux_sum(t,0.5)
-print("test;", test)
-somme = 0
-for i in range(len(t)):
-    print (t[i])
-    somme += t[i]*0.5
-print(somme)
-print ("différence:", somme-mean)
+
+def complete(t_list):
+    # complete a list of L elements
+    L = []
+    t0 = t_list[0]
+    mid = (t_list[0]+t_list[len(t_list)-1])/2
+    t = t0
+    i=0
+    while t < mid:
+        L.append(t_list[i]*5)
+        print(i, ":", t_list[i])
+        i+=1
+        t+=t_list[1]-t_list[0]
+        print("t", t)
+    print("now t is:", t)
+    print(t_list[-1])
+    print(t_list)
+
+    if t == mid:
+        newlist = L[::-1]
+        L.append(t_list[i] * 5)
+        L.extend(newlist)
+        print("oui")
+        print(len(L))
+    else:
+        newlist = L[::-1]
+        L.extend(newlist)
+        #for j in range(1,len(L)+1,-1):
+        #    print(j)
+        #    L.append(L[-j])
+    #else:
+    #    L[j] = 1
+
+    print(L)
+
+print(1)
+complete([1,2,3,4])
+print("\n",2)
+complete([1,2,3,4,5])
