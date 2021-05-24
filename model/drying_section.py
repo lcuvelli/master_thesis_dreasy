@@ -3,8 +3,10 @@ from math import exp
 import numpy as np
 
 from model.tools import darboux_sum
+import matplotlib.pyplot as plt
+import tikzplotlib
 
-Lw = 2358 * 1000 # J/kg - Mass latent heat of vaporization #TODO: change in function of T
+Lw = 2327 * 1000 # J/kg - Mass latent heat of vaporization #TODO: change in function of T
 DELTA_T = 0.5
 
 
@@ -15,6 +17,7 @@ def evaporation_coefficient(X0, Xf, td):
 
     alpha = - 4 * (X0 - Xf) / (td * 3600 * (exp(-4) - 1))
 
+    print("alpha:", alpha)
     return alpha
 
 def J(t, alpha, t0, td):
@@ -49,12 +52,11 @@ def main():
     td = 8
     t0 = 8
     Td = 72
-    T = [52.433942822073334, 58.89285801525381, 64.60631177193056, 69.51086835636687, 73.56538722602579, 76.74227853597085, 79.02307199295967, 80.39593762017427, 80.85426799360641, 80.39593762017427, 79.02307199295967, 76.74227853597085, 73.56538722602579, 69.51086835636687, 64.60631177193056, 58.892858015253864, 52.433942822073334]
+    T = [51.985087889691954, 58.353692954982364, 63.99054428862053, 68.83152598939381, 72.83487445157692, 75.97248713966513, 78.22550014154865, 79.58180673453506, 80.03463552531377, 79.58180673453506, 78.22550014154865, 75.97248713966513, 72.83487445157692, 68.83152598939381, 63.99054428862053, 58.353692954982364, 51.985087889691954]
 
-    P =  [96.26335423722986, 117.20765316697187, 134.93223888637624, 149.5998727215352, 161.37167260071897, 170.38463077113204, 176.74607043311025, 180.53247440243888, 181.78954460467682, 180.53247440243888, 176.74607043311025, 170.38463077113207, 161.3716726007191, 149.59987272153523, 134.93223888637627, 117.20765316697172, 96.26335423722986]
+    P = [99.39091088154504, 121.28341868671652, 139.83863869967377, 155.21544134048008, 167.5710896816765, 177.04000098051324, 183.72794399767815, 187.710532227613, 189.03303965426537, 187.710532227613, 183.72794399767815, 177.04000098051327, 167.57108968167668, 155.2154413404801, 139.83863869967385, 121.28341868671664, 99.39091088154504]
 
-
-    Wd = 1.95 #m
+    Wd = 1.5 #m
     M0 = 25 #kg
 
     compute_drying_length(X0, Xf, M0, td, t0, Td, Wd, P, T)
@@ -80,9 +82,28 @@ def compute_drying_length(X0, Xf, M0, td, t0, Td, Wd, P:list, T:list):
     for i in range(len(T)):
         evaporation_rate_J.append(J2(intervals_t[i],T[i]+273, alpha, Td+273, t0, td))
 
+    evaporation_rate_J_per_hour = evaporation_rate_J[::]
+    for i in range(len(evaporation_rate_J)):
+        evaporation_rate_J_per_hour[i] = evaporation_rate_J_per_hour[i] * 3600
+    print(evaporation_rate_J_per_hour)
+    print( evaporation_rate_J)
+    print( darboux_sum(evaporation_rate_J_per_hour,0.5)/td)
+    print("mean J:", darboux_sum(evaporation_rate_J,0.5))
+
+
+
+    plt.figure(1)
+    plt.xlabel('Time of the day (h)')
+    plt.ylabel('Temperatures (°C)')
+    plt.title('Temperature inside the dryer during the day, heating section is')
+    plt.plot(intervals_t, evaporation_rate_J_per_hour, 'go')
+    tikzplotlib.save("mytikz.tex")
+
+    #plt.show()
 
     mean_evaporation_rate = darboux_sum(evaporation_rate_J, DELTA_T)
     mean_P = darboux_sum(P, DELTA_T)
+    print('mean_P', mean_P/td)
 
     MS = (1+X0)/Lw * mean_P/mean_evaporation_rate
     print("Mass of product per unit area:", round(MS,2), "kg/m2")

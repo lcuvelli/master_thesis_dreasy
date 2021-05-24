@@ -123,7 +123,7 @@ def main():
     Xf = 0.1    # kg water / kg dry product
     M0 = 10     # kg
     td = 6.5 # seconds
-    Td = 62.5+273.15 # K
+    Td = 62+273.15 # K
     print("Données : \n",
           "M0 : ", M0, " kg \n",
           "X0 : ", X0, " kg water / kg dry product \n",
@@ -140,7 +140,7 @@ def main():
     Qmin = minimal_air_flow_rate(Yamb, M0, X0, Xf, td, Td)
     print("Qmin is : ", round(Qmin,5), " kg humid air / s")
 
-    F = 12
+    F = 10
     Q = air_flow_rate(Qmin, F)
     print("Q is : ", round(Q, 5), " kg humid air / s, using factor F = ", F)
 

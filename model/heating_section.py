@@ -4,6 +4,7 @@ from time import process_time
 import os
 
 import matplotlib.pyplot as plt
+import tikzplotlib
 from scipy.optimize import fsolve
 
 from model import heat_transfer_coefficient as libh, tools as tools
@@ -13,7 +14,7 @@ from model import heat_transfer_coefficient as libh, tools as tools
 #e = 6 / 1000  # m - Thickness of the slices of product
 
 Tmax = 90   # °C - maximal Tair allowed at the end of the heating section along the day #TODO: discuss function product
-tol = 2    # °C (or K) - tolerance on the mean temperature in the dryer
+tol = 2.5    # °C (or K) - tolerance on the mean temperature in the dryer
 
 DELTA_Z = 0.1
 DELTA_T = 0.5
@@ -104,7 +105,7 @@ def balance_equations_heating(vars, *data):
     # Heat transfer coefficients depend on the temperatures
     h_fl_air = libh.convective_heat_transfer_coefficient(Tfl, Tair, Lc)
     h_p_air = libh.convective_heat_transfer_coefficient(Tp, Tair, Lc)
-    h_star = 10 # libh.convective_heat_transfer_coefficient(Tp, Tamb, 2.3)
+    h_star = 6 # libh.convective_heat_transfer_coefficient(Tp, Tamb, 2.3)
     #print(h_star, h_fl_air, h_p_air)
 
     eq1 = Iatm + direct_diffuse_solar_radiation(Sm, tset, trise, t) - h_star * (Tp - Tamb) - libh.infrared_energy_flux(Tp)
@@ -227,18 +228,18 @@ def main():
     Sm = 613  # W/m2
     tset = 18  # h - Time sunset
     trise = 6  # h - Time sunrise
-    R = 1.5  # m - Aspect ratio
-    Lc = 0.66  # m - Hydraulic diamater #fixed by cross section
+    R = 1.55  # m - Aspect ratio
+    Lc = 0.63  # m - Hydraulic diamater #fixed by cross section
     k = 0.85  # Reduction factor
-    Q = 0.024 #(au lieu de 0.023)  # kg of humid air/s - Air flow rate
-    Wd = 1.95  # m - Width of the dryer
+    Q = 0.0233 #(au lieu de 0.023)  # kg of humid air/s - Air flow rate
+    Wd = 1.5  # m - Width of the dryer
     td = 8
     Td = 72+273.15
 
 
     solution = compute_heating_length(Tamb, Iatm, Sm, tset, trise, Lc, R, k, Q, Wd, td, Td)
 
-    print(solution['Tair_LH'], "\n", solution['LH'], "\n", solution['P_LH'], "\n")
+    print('Tair_LH', solution['Tair_LH'], "\n", 'LH', solution['LH'], "\n", 'P_LH', solution['P_LH'], "\n")
     os.system('say "over"')
 
 def compute_heating_length(Tamb, Iatm, Sm, tset, trise, Lc, R, k, Q, Wd, td, Td):
@@ -261,7 +262,7 @@ def compute_heating_length(Tamb, Iatm, Sm, tset, trise, Lc, R, k, Q, Wd, td, Td)
     Ca = 1009  # Heat capacity air, J/kg/K (assumed constant)
 
 
-    LH = 4.4
+    LH = 10
     air = 3  # Tair is the 4th element of vector x
     energy = 2  # P is the 3rd element of vector x
     Tair_LH, P_LH, intervals_z, intervals = [], [], [], []
@@ -320,9 +321,10 @@ def compute_heating_length(Tamb, Iatm, Sm, tset, trise, Lc, R, k, Q, Wd, td, Td)
 
     solution = {"LH": LH, "Tair_LH": Tair_LH, "P_LH": P_LH, "Td_mean": mean_temperature}
 
+    draw_profiles(Tair_LH, P_LH, intervals, LH)
     return solution
 
-    #draw_profiles(Tair_LH, P_LH, intervals, LH)
+
 
 
 
@@ -340,17 +342,18 @@ def draw_profiles(Tair_LH: list, P_LH: list, intervals: list, LH):
     plt.ylabel('Temperatures (°C)')
     plt.title('Temperature inside the dryer during the day, heating section is %1.2f' %LH)
     plt.plot(intervals, Tair_LH, 'go')
+    tikzplotlib.save("mytikzair.tex")
     # plt.show()
 
     plt.figure(2)
     plt.xlabel('Time of the day (h)')
     plt.ylabel('Energy flux (W/m2)')
     plt.title('Energy flux transferred to the air inside the dryer, heating section is %1.2f' %LH)
-    plt.plot(intervals, P_LH, 'ro')
-    plt.show()
+    plt.plot(intervals, P_LH, 'bo')
+    #plt.show()
 
     # Save graph in Latex format (before plt.show())
-    # tikzplotlib.save("mytikz.tex")
+    tikzplotlib.save("mytikzP.tex")
 
 if __name__ == '__main__':
     main()
